@@ -134,6 +134,41 @@ ASTVisGraph ParseLLVMAST(std::ifstream& iFile, int FormatArgs)
 
     while(std::getline(iFile, Line))
     {
+        if((FormatArgs & TF_NO_IMPLICIT) == TF_NO_IMPLICIT)
+        {
+            // Skip the sub-tree that satisfies following condition
+            while(Line.find("implicit") != std::string::npos)
+            {
+                std::size_t NumberOfParenSpaces = 0;
+                for(auto iter : Line)
+                {
+                    if(iter == '-')
+                        break;
+                    else if(iter == ' ')
+                    NumberOfParenSpaces++;
+                }
+
+                while(std::getline(iFile, Line))
+                {
+                    std::size_t NumberOfChildSpaces = 0;
+                    for(auto iter : Line)
+                    {
+                        if(iter == '-')
+                            break;
+                        else if(iter == ' ')
+                            NumberOfChildSpaces++;
+                    }
+
+                    if(NumberOfChildSpaces == NumberOfParenSpaces)
+                        break;
+                }
+            }
+        }
+
+        //---------------------------------------------------------------------
+        //  At this point, all tree transformations are done
+        // ---------------------------------------------------------------------
+
         // Skip any occurences of the formatting characters
         auto LabelIter = Line.find_first_not_of(" -|`");
 
