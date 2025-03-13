@@ -70,11 +70,16 @@ int main(int argc, char **argv)
         po::notify(vm);
 
         if(vm.count("help"))
+        {
             std::cout << desc << std::endl;
+            return 0;
+        }
 
         if(vm.count("list"))
         {
             std::cout << "no-node-id - Removes internal node identification number\n";
+            std::cout << "no-loc - Removes any location information\n";
+            std::cout << "no-errors - Removes error message\n";
             std::cout << "no-implicit - Removes any node containing 'implicit' annotation\n";
             std::cout << "fancy - A set of filters aimed at providing clear AST visualization\n";
         }
@@ -89,14 +94,15 @@ int main(int argc, char **argv)
                 if(Format == "no-node-id")
                     FormatArgs |= DF_NO_NODE_ID;
                 if(Format == "no-loc")
-                    FormatArgs |= DF_NO_LOC;
-                if(Format == "no-errors")
-                    FormatArgs |= DF_NO_ERRS; 
+                    FormatArgs |= DF_NO_LOC;        
+                if(Format == "no-errors")           
+                    FormatArgs |= DF_NO_ERRS;       
                 if(Format == "no-implicit")
-                    FormatArgs |= TF_NO_IMPLICIT;
+                    FormatArgs |= TF_NO_IMPLICIT;   
                 if(Format == "fancy")
-                    FormatArgs |= PR_FANCY;
-                else 
+                    FormatArgs |= PR_FANCY;         
+                
+                if(FormatArgs == NO_FT)
                     throw po::error("No such format option: " + Format);
             }
         }
@@ -176,7 +182,7 @@ ASTVisGraph ParseLLVMAST(std::ifstream& iFile, int FormatArgs)
 
         // Extract actual label frosm the orginial line to get only node's label
         std::string Label = std::string(Line.begin() + LabelIter, Line.end());
-        // Label = FilterLine(Label, FormatArgs);
+        Label = FilterLine(Label, FormatArgs);
 
         // Analyze the Line trying to figure out the node's parent
         std::size_t Indents = 0;
