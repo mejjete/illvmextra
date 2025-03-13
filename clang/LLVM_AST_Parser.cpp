@@ -139,27 +139,29 @@ ASTVisGraph ParseLLVMAST(std::ifstream& iFile, int FormatArgs)
             // Skip the sub-tree that satisfies following condition
             while(Line.find("implicit") != std::string::npos)
             {
-                std::size_t NumberOfParenSpaces = 0;
+                std::size_t ParentIndents = 0;
                 for(auto iter : Line)
                 {
-                    if(iter == '-')
+                    if(isalpha(iter))
                         break;
-                    else if(iter == ' ')
-                    NumberOfParenSpaces++;
+                        ParentIndents++;
                 }
+
+                std::size_t ParentLayout = ParentIndents / 2;
 
                 while(std::getline(iFile, Line))
                 {
-                    std::size_t NumberOfChildSpaces = 0;
+                    std::size_t ChildIndents = 0;
                     for(auto iter : Line)
                     {
-                        if(iter == '-')
+                        if(isalpha(iter))
                             break;
-                        else if(iter == ' ')
-                            NumberOfChildSpaces++;
+                            ChildIndents++;
                     }
 
-                    if(NumberOfChildSpaces == NumberOfParenSpaces)
+                    std::size_t ChildLayout = ChildIndents / 2;
+
+                    if(ChildLayout == ParentLayout)
                         break;
                 }
             }
@@ -174,29 +176,28 @@ ASTVisGraph ParseLLVMAST(std::ifstream& iFile, int FormatArgs)
 
         // Extract actual label frosm the orginial line to get only node's label
         std::string Label = std::string(Line.begin() + LabelIter, Line.end());
-        Label = FilterLine(Label, FormatArgs);
+        // Label = FilterLine(Label, FormatArgs);
 
         // Analyze the Line trying to figure out the node's parent
-        std::size_t NumberOfSpaces = 0;
+        std::size_t Indents = 0;
         for(auto iter : Line)
         {
-            if(iter == '-')
+            if(isalpha(iter))
                 break;
-            else if(iter == ' ')
-                NumberOfSpaces++;
+            Indents++;
         }
 
-        std::size_t NodeDegree = ((NumberOfSpaces + 1) / 2) + 1;
+        std::size_t Layout = Indents / 2;
 
         // Resize the vector of nodes to the parent's of the currect node
-        if(NodeDegree < NodeArray.size())
-            NodeArray.resize(NodeDegree);
+        if(Layout < NodeArray.size())
+            NodeArray.resize(Layout);
 
         // Add new node to the appropiate place
         auto NewVertex = add_vertex(Graph);
         put(vertex_name, Graph, NewVertex, Label);
         NodeArray.push_back(NewVertex);
-        add_edge(NodeArray[NodeDegree - 1], NewVertex, Graph);
+        add_edge(NodeArray[Layout - 1], NewVertex, Graph);
     }
 
     return Graph;
