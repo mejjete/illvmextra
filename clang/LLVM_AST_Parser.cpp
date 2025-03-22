@@ -23,10 +23,10 @@ struct CustomLabelWriter
 };
 
 /**
- *  There's basically two types of a filter, the one that affect the label of the node, their name start with DF.
+ *  There's basically two types of a filter, the ones that affect the label of the node, their name start with DF.
  *  They basically control the display options of the node, i.e disable or enable the optional node information.
  *  
- *  The other begins with TF, it modifies the AST tree itself either by transforming it or by ignoring some of the 
+ *  The other begin with TF, it modifies the AST tree itself either by transforming it or by omitting some of the 
  *  branches of the tree that do not seem to be relevant. 
  */
 enum 
@@ -150,7 +150,7 @@ ASTVisGraph ParseLLVMAST(std::ifstream& iFile, int FormatArgs)
                 {
                     if(isalpha(iter))
                         break;
-                        ParentIndents++;
+                    ParentIndents++;
                 }
 
                 std::size_t ParentLayout = ParentIndents / 2;
@@ -162,7 +162,7 @@ ASTVisGraph ParseLLVMAST(std::ifstream& iFile, int FormatArgs)
                     {
                         if(isalpha(iter))
                             break;
-                            ChildIndents++;
+                        ChildIndents++;
                     }
 
                     std::size_t ChildLayout = ChildIndents / 2;
