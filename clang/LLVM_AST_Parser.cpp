@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <regex>
+#include <algorithm>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graphviz.hpp>
 #include <boost/program_options.hpp>
@@ -17,7 +18,11 @@ struct CustomLabelWriter
 
     template <typename Vertex>
     void operator()(std::ostream& out, const Vertex& v) const 
-    { out << "[label=\"" << get(vertex_name, graph, v) << "\"]"; }
+    { 
+        std::string label = get(vertex_name, graph, v);
+        std::replace(label.begin(), label.end(), '"', '\'');
+        out << "[label=\"" << label << "\"]"; 
+    }
 
     ASTVisGraph& graph;
 };
