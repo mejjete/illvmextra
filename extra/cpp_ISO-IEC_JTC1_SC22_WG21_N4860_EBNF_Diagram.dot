@@ -1,0 +1,263 @@
+# Partial visualization of C++ Draft N4860 
+
+digraph CppISO-IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
+    rankdir=LR;
+    node [shape=box];
+
+
+
+    # [stmt.pre] ------------------------------------------------------------------
+
+    statement1[label=<attribute-specifier-seq<SUB>opt</SUB> try-block>]
+    statement2[label=<attribute-specifier-seq<SUB>opt</SUB> expression-statement>]
+    statement3[label=<attribute-specifier-seq<SUB>opt</SUB> compound-statement>]
+    statement4[label=<attribute-specifier-seq<SUB>opt</SUB> selection-statement>]
+    statement5[label=<attribute-specifier-seq<SUB>opt</SUB> iteration-statement>]
+    statement6[label=<attribute-specifier-seq<SUB>opt</SUB> jump-statement>]
+
+    statement -> "labeled-statement"
+    statement -> statement2;
+    statement -> statement3;
+    statement -> statement4;
+    statement -> statement5;
+    statement -> statement6;
+    statement -> "declaration-statement";
+    statement -> statement1;
+
+    "init-statement" -> "expression-statement";
+    "init-statement" -> "simple-declaration";
+
+    condition1[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq declarator brace-or-equal-initializer>]
+    condition -> "expression";
+    condition -> condition1;
+
+    labeledstm1[label=<attribute-specifier-seq<SUB>opt</SUB> identifier : statement>]
+    labeledstm2[label=<attribute-specifier-seq<SUB>opt</SUB> case constant-expression : statement>]
+    labeledstm3[label=<attribute-specifier-seq<SUB>opt</SUB> default : statement>]
+
+    "labeled-statement" -> labeledstm1;
+    "labeled-statement" -> labeledstm2;
+    "labeled-statement" -> labeledstm3;
+
+    expressionstm1[label=<expression<SUB>opt</SUB>>];
+    
+    "expression-statement" -> expressionstm1;
+
+    compoundstm1[label=<{ statement-seq<SUB>opt</SUB> } >];
+    "compound-statement" -> compoundstm1;
+
+    "statement-seq" -> statement;
+    "statement-seq" -> "statement-seq statement"
+
+    selectionstm1[label=<if constexpr<SUB>opt</SUB> ( init-statement<SUB>opt</SUB> condition ) statement>];
+    selectionstm2[label=<if constexpr<SUB>opt</SUB>( init-statement<SUB>opt</SUB> condition ) statement else statement>];
+    selectionstm3[label=<switch ( init-statement<SUB>opt</SUB> condition ) statement>];
+
+
+
+    # [stmt.iter] ------------------------------------------------------------------
+
+    iterationsmt1[label=<for ( init-statement condition<SUB>opt</SUB> ; expression<SUB>opt</SUB> ) statement>];
+    iterationsmt2[label=<for ( init-statement<SUB>opt</SUB> for-range-declaration : for-range-initializer ) statement>]
+    
+    "iteration-statement" -> "while ( condition ) statement";
+    "iteration-statement" -> "do statement while ( expression ) ;";
+
+    forrdecl1[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq declarator>]
+    forrdecl2[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq ref-qualifier<SUB>opt</SUB> [ identifier-list ]>]
+
+    "for-range-declaration" -> forrdecl1;
+    "for-range-declaration" -> forrdecl2;
+
+    "for-range-initializer" -> "expr-or-braced-init-list"
+
+
+
+    # [dcl.pre] ------------------------------------------------------------------
+
+    "declaration-seq" -> declaration;
+    "declaration-seq" -> "declaration-seq declaration"
+
+    declaration -> "block-declaration";
+    declaration -> "nodeclspec-function-declaration";
+    declaration -> "function-definition";
+    declaration -> "template-declaration";
+    declaration -> "deduction-guide";
+    declaration -> "explicit-instantiation";
+    declaration -> "explicit-specialization";
+    declaration -> "export-declaration";
+    declaration -> "linkage-specification";
+    declaration -> "namespace-definition";
+    declaration -> "empty-declaration";
+    declaration -> "attribute-declaration";
+    declaration -> "module-import-declaration";
+
+    "block-declaration" -> "simple-declaration";
+    "block-declaration" -> "asm-declaration";
+    "block-declaration" -> "namespace-alias-definition";
+    "block-declaration" -> "using-declaration";
+    "block-declaration" -> "using-enum-declaration";
+    "block-declaration" -> "using-directive";
+    "block-declaration" -> "static_assert-declaration";
+    "block-declaration" -> "alias-declaration";
+    "block-declaration" -> "opaque-enum-declaration";
+
+    nodesclspecfucdecl1[label=<attribute-specifier-seq<SUB>opt</SUB> declarator ;>];
+    "nodeclspec-function-declaration" -> nodesclspecfucdecl1;
+
+    aliasdecl1[label=<using identifier attribute-specifier-seq<SUB>opt</SUB> = defining-type-id ;>]
+    "alias-declaration" -> aliasdecl1;
+
+    simpldecl1[label=<decl-specifier-seq init-declarator-list<SUB>opt</SUB> ;>];
+    simpldecl1[label=<attribute-specifier-seq decl-specifier-seq init-declarator-list ;>];
+    simpldecl1[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq ref-qualifier<SUB>opt</SUB> [ identifier-list ] initializer ;>];
+
+    "simple-declaration" -> simpldecl1;
+    "simple-declaration" -> simpldecl2;
+    "simple-declaration" -> simpldecl3;
+
+    "static_assert-declaration" -> "static_assert ( constant-expression ) ;";
+    "static_assert-declaration" -> "static_assert ( constant-expression , string-literal ) ;";
+    
+    "empty-declaration" -> ";";
+
+    "attribute-declaration" -> "attribute-specifier-seq ;";
+
+
+
+    # [dcl.spec] ------------------------------------------------------------------
+
+    "decl-specifier" -> "storage-class-specifier";
+    "decl-specifier" -> "defining-type-specifier";
+    "decl-specifier" -> "function-specifier";
+    "decl-specifier" -> friend;
+    "decl-specifier" -> typedef;
+    "decl-specifier" -> constexpr;
+    "decl-specifier" -> consteval;
+    "decl-specifier" -> constinit;
+    "decl-specifier" -> inline;
+
+    declspecseq1[label=<decl-specifier attribute-specifier-seq<SUB>opt</SUB>>];
+
+    "decl-specifier-seq" -> "declspecseq1";
+    "decl-specifier-seq" -> "decl-specifier decl-specifier-seq";
+
+    "function-specifier" -> virtual;
+    "function-specifier" -> "explicit-specifier";
+
+    "explicit-specifier" -> "explicit ( constant-expression )";
+    "explicit-specifier" -> "explicit";
+
+    "typedef-name" -> identifier;
+    "typedef-name" -> "simple-template-id";
+
+
+
+    # [dcl.type] ------------------------------------------------------------------
+
+    "type-specifier" -> "simple-type-specifier";
+    "type-specifier" -> "elaborated-type-specifier";
+    "type-specifier" -> "typename-specifier";
+    "type-specifier" -> "cv-qualifier";
+
+    typespecseq1[label=<type-specifier attribute-specifier-seq<SUB>opt</SUB>>]
+
+    "type-specifier-seq" -> typespecseq1;
+    "type-specifier-seq" -> "type-specifier type-specifier-seq";
+
+    "defining-type-specifier" -> "type-specifier";
+    "defining-type-specifier" -> "class-specifier";
+    "defining-type-specifier" -> "enum-specifier";
+
+    definingtypespecseq1[label=<defining-type-specifier attribute-specifier-seq<SUB>opt</SUB>>];
+
+    "defining-type-specifier-seq" -> definingtypespecseq1;
+    "defining-type-specifier-seq" -> "defining-type-specifier defining-type-specifier-seq";
+    
+    "type-name" -> "class-name";
+    "type-name" -> "enum-name";
+    "type-name" -> "typedef-name";
+
+    elaboratedtpspec1[label=<class-key attribute-specifier-seq<SUB>opt</SUB> nested-name-specifier<SUB>opt</SUB> identifier>];
+    elaboratedtpspec2[label=<class-key nested-name-specifier template<SUB>opt</SUB> simple-template-id>];
+
+    "elaborated-type-specifier" -> elaboratedtpspec1;
+    "elaborated-type-specifier" -> "class-key simple-template-id";
+    "elaborated-type-specifier" -> elaboratedtpspec2;
+    "elaborated-type-specifier" -> "elaborated-enum-specifier";
+
+    elaboratedenspec1[label=<enum nested-name-specifier<SUB>opt</SUB> identifier>];
+
+    "elaborated-enum-specifier" -> elaboratedenspec1;
+
+    "decltype-specifier" -> "decltype ( expression )";
+
+    placeholdtpspec1[label=<type-constraint<SUB>opt</SUB> auto>];
+    placeholdtpspec2[label=<type-constraint<SUB>opt</SUB> decltype ( auto )>];
+
+    "placeholder-type-specifier" -> placeholdtpspec1;
+    "placeholder-type-specifier" -> placeholdtpspec2;
+
+
+
+    # [dcl.decl] ------------------------------------------------------------------
+
+    "init-declarator-list" -> "init-declarator";
+    "init-declarator-list" -> "init-declarator-list , init-declarator";
+
+    initdecl1[label=<declarator initializer<SUB>opt</SUB>>];
+
+    "init-declarator" -> initdecl1;
+    "init-declarator" -> "declarator requires-clause";
+
+    "declarator" -> "ptr-declarator";
+    "declarator" -> "n<SUB>opt</SUB>r-declarator parameters-and-qualifiers trailing-return-type";
+
+    "ptr-declarator" -> "noptr-declarator";
+    "ptr-declarator" -> "ptr-operator ptr-declarator";
+
+    n<SUB>opt</SUB>rdecl1[label=<declarator-id attribute-specifier-seq<SUB>opt</SUB>>];
+    n<SUB>opt</SUB>rdecl2[label=<n<SUB>opt</SUB>r-declarator [ constant-expression<SUB>opt</SUB> ] attribute-specifier-seq<SUB>opt</SUB>>];
+
+    "n<SUB>opt</SUB>r-declarator" -> n<SUB>opt</SUB>rdecl1;
+    "n<SUB>opt</SUB>r-declarator" -> "n<SUB>opt</SUB>r-declarator parameters-and-qualifiers";
+    "n<SUB>opt</SUB>r-declarator" -> n<SUB>opt</SUB>rdecl2;
+    "n<SUB>opt</SUB>r-declarator" -> "( ptr-declarator )";
+
+    parametersqual1[label=<( parameter-declaration-clause ) cv-qualifier-seq<SUB>opt</SUB>>];
+    parametersqual2[label=<ref-qualifier<SUB>opt</SUB> noexcept-specifier<SUB>opt</SUB> attribute-specifier-seq<SUB>opt</SUB>>];
+
+    "parameters-and-qualifiers" -> parametersqual1;
+    "parameters-and-qualifiers" -> parametersqual2;
+
+    "trailing-return-type" -> "-> type-id";
+
+    ptrop1[label=<* attribute-specifier-seq<SUB>opt</SUB> cv-qualifier-seq<SUB>opt</SUB>>];
+    ptrop2[label=<&amp; attribute-specifier-seq<SUB>opt</SUB>>];
+    ptrop3[label=<&amp;&amp; attribute-specifier-seq<SUB>opt</SUB>>];
+    ptrop4[label=<nested-name-specifier * attribute-specifier-seq<SUB>opt</SUB> cv-qualifier-seq<SUB>opt</SUB>>];
+
+    "ptr-operator" -> ptrop1; 
+    "ptr-operator" -> ptrop2;
+    "ptr-operator" -> ptrop3;
+    "ptr-operator" -> ptrop4;
+
+    cvqualseq1[label=<cv-qualifier cv-qualifier-seq<SUB>opt</SUB>>];
+
+    "cv-qualifier-seq" -> cvqualseq1;
+
+    "cv-qualifier" -> "const";
+    "cv-qualifier" -> "volatile";
+
+    refqual1[label=<...&amp;<SUB>opt</SUB><BR/>&amp;&amp;>];
+
+    "ref-qualifier" -> refqual1;
+
+    declid1[label=<id-expression>];
+    
+    "declarator-id" -> declid1;
+
+
+
+    # [decl.name] ------------------------------------------------------------------
+}
