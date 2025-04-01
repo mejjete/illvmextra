@@ -1,6 +1,6 @@
 # Partial visualization of C++ Draft N4860 
 
-digraph CppISO-IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
+digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     rankdir=LR;
     node [shape=box];
 
@@ -53,6 +53,10 @@ digraph CppISO-IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     selectionstm2[label=<if constexpr<SUB>opt</SUB>( init-statement<SUB>opt</SUB> condition ) statement else statement>];
     selectionstm3[label=<switch ( init-statement<SUB>opt</SUB> condition ) statement>];
 
+    "selection-statement" -> selectionstm1;
+    "selection-statement" -> selectionstm2;
+    "selection-statement" -> selectionstm3;
+
 
 
     # [stmt.iter] ------------------------------------------------------------------
@@ -60,6 +64,8 @@ digraph CppISO-IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     iterationsmt1[label=<for ( init-statement condition<SUB>opt</SUB> ; expression<SUB>opt</SUB> ) statement>];
     iterationsmt2[label=<for ( init-statement<SUB>opt</SUB> for-range-declaration : for-range-initializer ) statement>]
     
+    "iterator-statement" -> iterationsmt1;
+    "iterator-statement" -> iterationsmt2;
     "iteration-statement" -> "while ( condition ) statement";
     "iteration-statement" -> "do statement while ( expression ) ;";
 
@@ -109,8 +115,8 @@ digraph CppISO-IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "alias-declaration" -> aliasdecl1;
 
     simpldecl1[label=<decl-specifier-seq init-declarator-list<SUB>opt</SUB> ;>];
-    simpldecl1[label=<attribute-specifier-seq decl-specifier-seq init-declarator-list ;>];
-    simpldecl1[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq ref-qualifier<SUB>opt</SUB> [ identifier-list ] initializer ;>];
+    simpldecl2[label=<attribute-specifier-seq decl-specifier-seq init-declarator-list ;>];
+    simpldecl3[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq ref-qualifier<SUB>opt</SUB> [ identifier-list ] initializer ;>];
 
     "simple-declaration" -> simpldecl1;
     "simple-declaration" -> simpldecl2;
@@ -211,18 +217,18 @@ digraph CppISO-IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "init-declarator" -> "declarator requires-clause";
 
     "declarator" -> "ptr-declarator";
-    "declarator" -> "n<SUB>opt</SUB>r-declarator parameters-and-qualifiers trailing-return-type";
+    "declarator" -> "noptr-declarator parameters-and-qualifiers trailing-return-type";
 
     "ptr-declarator" -> "noptr-declarator";
     "ptr-declarator" -> "ptr-operator ptr-declarator";
 
-    n<SUB>opt</SUB>rdecl1[label=<declarator-id attribute-specifier-seq<SUB>opt</SUB>>];
-    n<SUB>opt</SUB>rdecl2[label=<n<SUB>opt</SUB>r-declarator [ constant-expression<SUB>opt</SUB> ] attribute-specifier-seq<SUB>opt</SUB>>];
+    noptrdecl1[label=<declarator-id attribute-specifier-seq<SUB>opt</SUB>>];
+    noptrdecl2[label=<noptr-declarator [ constant-expression<SUB>opt</SUB> ] attribute-specifier-seq<SUB>opt</SUB>>];
 
-    "n<SUB>opt</SUB>r-declarator" -> n<SUB>opt</SUB>rdecl1;
-    "n<SUB>opt</SUB>r-declarator" -> "n<SUB>opt</SUB>r-declarator parameters-and-qualifiers";
-    "n<SUB>opt</SUB>r-declarator" -> n<SUB>opt</SUB>rdecl2;
-    "n<SUB>opt</SUB>r-declarator" -> "( ptr-declarator )";
+    "noptr-declarator" -> noptrdecl1;
+    "noptr-declarator" -> "noptr-declarator parameters-and-qualifiers";
+    "noptr-declarator" -> noptrdecl2;
+    "noptr-declarator" -> "( ptr-declarator )";
 
     parametersqual1[label=<( parameter-declaration-clause ) cv-qualifier-seq<SUB>opt</SUB>>];
     parametersqual2[label=<ref-qualifier<SUB>opt</SUB> noexcept-specifier<SUB>opt</SUB> attribute-specifier-seq<SUB>opt</SUB>>];
@@ -249,7 +255,7 @@ digraph CppISO-IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "cv-qualifier" -> "const";
     "cv-qualifier" -> "volatile";
 
-    refqual1[label=<...&amp;<SUB>opt</SUB><BR/>&amp;&amp;>];
+    refqual1[label=<...&amp;<SUB>opt</SUB><BR/><BR/>&amp;&amp;>];
 
     "ref-qualifier" -> refqual1;
 
@@ -259,5 +265,552 @@ digraph CppISO-IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
 
 
 
-    # [decl.name] ------------------------------------------------------------------
+    # [dcl.name] ------------------------------------------------------------------
+    
+    typeid1[label=<type-specifier-seq abstract-declarator<SUB>opt</SUB>>]
+
+    "type-id" -> typeid1;
+
+    deftypeid1[label=<defining-type-specifier-seq abstract-declarator<SUB>opt</SUB>>]
+
+    "defining-type-id" -> deftypeid1;
+
+    abstrdecl1[label=<noptr-abstract-declarator<SUB>opt</SUB> parameters-and-qualifiers trailing-return-type>]
+
+    "abstract-declarator" -> "ptr-abstract-declarator";
+    "abstract-declarator" -> abstrdecl1;
+    "abstract-declarator" -> "abstract-pack-declarator";
+
+    ptrabstrdecl1[label=<ptr-operator ptr-abstract-declaratoropt>];
+
+    "ptr-abstract-declarator" -> "noptr-abstract-declarator"
+    "ptr-abstract-declarator" -> ptrabstrdecl1;
+
+    noptrabstdecl1[label=<noptr-abstract-declarator<SUB>opt</SUB> parameters-and-qualifiers>];
+    noptrabstdecl2[label=<noptr-abstract-declarator<SUB>opt</SUB> [ constant-expression<SUB>opt</SUB> ] attribute-specifier-seqo<SUB>opt</SUB>>];
+
+    "noptr-abstract-declarator" -> noptrabstdecl1;
+    "noptr-abstract-declarator" -> noptrabstdecl2;
+    "noptr-abstract-declarator" -> "( ptr-abstract-declarator )";
+
+    "abstract-pack-declarator" -> "noptr-abstract-pack-declarator"; 
+    "abstract-pack-declarator" -> "ptr-operator abstract-pack-declarator";
+
+    noptrabspackdecl1[label=<noptr-abstract-pack-declarator [ constant-expressionopt ] attribute-specifier-seqopt>];
+
+    "noptr-abstract-pack-declarator" -> "noptr-abstract-pack-declarator parameters-and-qualifiers";
+    "noptr-abstract-pack-declarator" -> noptrabspackdecl1;
+    "noptr-abstract-pack-declarator" -> "...";
+
+
+
+    # [dcl.fct] ------------------------------------------------------------------
+
+    parameterdeclclause1[label=<parameter-declaration-list<SUB>opt</SUB> ...<SUB>opt</SUB>>]
+
+    "parameter-declaration-clause" -> parameterdeclclause1;
+    "parameter-declaration-clause" -> "parameter-declaration-list , ...";
+
+    pardecl1[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq declarator>];
+    pardecl2[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq declarator = initializer-clause>];
+    pardecl3[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq abstract-declarator<SUB>opt</SUB>>];
+    pardecl4[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq abstract-declarator<SUB>opt</SUB> = initializer-clause>];
+
+    "parameter-declaration" -> pardecl1;
+    "parameter-declaration" -> pardecl2;
+    "parameter-declaration" -> pardecl3;
+    "parameter-declaration" -> pardecl4;
+
+
+
+    # [dcl.init] ------------------------------------------------------------------
+
+    "initializer" -> "brace-or-equal-initializer"
+    "initializer" -> "( expression-list )";
+
+    "brace-or-equal-initializer" -> "= initializer-clause"; 
+    "brace-or-equal-initializer" -> "braced-init-list";
+
+    "initializer-clause" -> "assignment-expression";
+    "initializer-clause" -> "braced-init-list";
+
+    brinitl1[label=<{ initializer-list ,<SUB>opt</SUB> }>];
+    brinitl2[label=<{ designated-initializer-list ,<SUB>opt</SUB> }>];
+
+    "braced-init-list" -> brinitl1;
+    "braced-init-list" -> brinitl2;
+    "braced-init-list" -> "{}";
+
+    initl1[label=<initializer-clause ...<SUB>opt</SUB>>];
+    initl2[label=<initializer-list , initializer-clause ...<SUB>opt</SUB>>];
+
+    "initializer-list" -> initl1;
+    "initializer-list" -> initl2;
+
+    "designated-initializer-list" -> "designated-initializer-clause"; 
+    "designated-initializer-list" -> "designated-initializer-list , designated-initializer-clause";
+
+    "designated-initializer-clause" -> "designator brace-or-equal-initializer";
+
+    "designator" -> ". identifier";
+
+    "expr-or-braced-init-list" -> expression;
+    "expr-or-braced-init-list" -> "braced-init-list";
+
+
+
+    # [dcl.fct.def] ------------------------------------------------------------------
+    
+    funcdecl1[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq<SUB>opt</SUB> declarator virt-specifier-seq<SUB>opt</SUB> function-body>];
+    funcdecl2[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq<SUB>opt</SUB> declarator requires-clause function-body>];
+
+    "function-definition" -> funcdecl1;
+    "function-definition" -> funcdecl2;
+
+    funcbd1[label=<ctor-initializer<SUB>opt</SUB> compound-statement>];
+
+    "function-body" -> funcbd1;
+    "function-body" -> "function-try-block";
+    "function-body" -> "= default ;";
+    "function-body" -> "= delete ;";
+
+
+
+    # [dcl.enum] ------------------------------------------------------------------
+    
+    "enum-name" -> "identifier";
+
+    enumspec1[label=<enum-head { enumerator-list<SUB>opt</SUB> }>];
+
+    "enum-specifier" -> enumspec1;
+    "enum-specifier" -> "enum-head { enumerator-list , }";
+
+    enumh1[label=<enum-key attribute-specifier-seqopt enum-head-name<SUB>opt</SUB> enum-base<SUB>opt</SUB>>];
+
+    "enum-head" -> enumh1;
+
+    enumname1[label=<nested-name-specifier<SUB>opt</SUB> identifier>];
+
+    "enum-head-name" -> enumname1;
+
+    opaqueendecl1[label=<enum-key attribute-specifier-seq<SUB>opt</SUB> enum-head-name enum-base<SUB>opt</SUB> ;">];
+
+    "opaque-enum-declaration" -> opaqueendecl1;
+
+    "enum-key" -> "enum";
+    "enum-key" -> "enum clas";
+    "enum-key" -> "enum struct";
+
+    "enum-base" -> "type-specifier-seq";
+
+    "enumerator-list" -> "enumerator-definition";
+    "enumerator-list" -> "enumerator-list , enumerator-definition";
+
+    "enumerator-definition" -> "enumerator";
+    "enumerator-definition" -> "enumerator = constant-expression";
+
+    enumer1[label=<identifier attribute-specifier-seq<SUB>opt</SUB>>];
+    
+    enumerator -> enumer1;
+
+
+
+    # [namespace.def] ------------------------------------------------------------------
+
+    "namespace-name" -> "identifier";
+    "namespace-name" -> "namespace-alias";
+
+    "namespace-definition" -> "named-namespace-definition";
+    "namespace-definition" -> "unnamed-namespace-definition";
+    "namespace-definition" -> "nested-namespace-definition";
+
+    namespacedef1[label=<inline<SUB>opt</SUB> namespace attribute-specifier-seq<SUB>opt</SUB> identifier { namespace-body }>];
+    
+    "named-namespace-definition" -> namespacedef1;
+
+    unnamenamdef1[label=<inline<SUB>opt</SUB> namespace attribute-specifier-seq<SUB>opt</SUB> { namespace-body }>]
+    
+    "unnamed-namespace-definition" -> unnamenamdef1;
+
+    nsnamenamdef1[label=<namespace enclosing-namespace-specifier :: inline<SUB>opt</SUB> identifier { namespace-body }>];
+
+    "nested-namespace-definition" -> nsnamenamdef1;
+
+    encnamespec1[label=<nested-namespace-definition :>];
+
+    "enclosing-namespace-specifier" -> "identifier";
+    "enclosing-namespace-specifier" -> encnamespec1;
+
+    nsbody1[label=<declaration-seq<SUB>opt</SUB>>];
+
+    "namespace-body" -> nsbody1;
+
+
+
+    # [namespace.alias] ------------------------------------------------------------------
+
+    "namespace-alias" -> "identifier;"
+
+    "namespace-alias-definition" -> "namespace identifier = qualified-namespace-specifier ;"
+
+    qualnsspec1[label=<nested-name-specifier<SUB>opt</SUB> namespace-name>]
+
+    "qualified-namespace-specifier" -> qualnsspec1;
+
+    usdirns1[label=<attribute-specifier-seqopt using namespace nested-name-specifier<SUB>opt</SUB> namespace-name ;>];
+
+    "using-directive" -> usdirns1;
+
+    "using-declaration" -> "using using-declarator-list ;";
+
+    usdeclist1[label=<using-declarator ...<SUB>opt</SUB>>]; 
+    usdeclist2[label=<using-declarator-list , using-declarator ...<SUB>opt</SUB>>];
+
+    "using-declarator-list" -> usdeclist1;
+    "using-declarator-list" -> usdeclist2;
+
+    linkspec1[label=<extern string-literal { declaration-seq<SUB>opt</SUB> }>];
+
+    "linkage-specification" -> linkspec1;
+    "linkage-specification" -> "extern string-literal declaration";
+
+
+
+    # [dcl.attr] ------------------------------------------------------------------
+
+    attrspecseq1[label=<attribute-specifier-seq<SUB><SUB>opt</SUB></SUB> attribute-specifier>];
+
+    "attribute-specifier-seq" -> attrspecseq1;
+
+    attrspec1[label=<[ [ attribute-using-prefix<SUB>opt</SUB> attribute-list ] ]>];
+
+    "attribute-specifier" -> attrspec1;
+    "attribute-specifier" -> "alignment-specifier";
+
+    allignspec1[label=<alignas ( type-id ...<SUB>opt</SUB> )>];
+    allignspec2[label=<alignas ( constant-expression ...<SUB>opt</SUB> )>];
+
+    "alignment-specifier" -> allignspec1;
+    "alignment-specifier" -> allignspec2;
+
+    "attribute-using-prefix" -> "using attribute-namespace";
+
+    attrl1[label=<attribute-list<SUB>opt</SUB>>];
+    attrl2[label=<attribute-list , attribute<SUB>opt</SUB>>];
+
+    "attribute-list" -> attrl1; 
+    "attribute-list" -> attrl2;
+    "attribute-list" -> "attribute ...";
+    "attribute-list" -> "attribute-list , attribute ...";
+
+    attr1[label=<attribute-token attribute-argument-clause<SUB>opt</SUB>>];
+
+    "attribute" -> attr1;
+
+    "attribute-token" -> identifier;
+    "attribute-token" -> "attribute-scoped-token";
+
+    "attribute-scoped-token" -> "attribute-namespace :: identifier";
+
+    "attribute-namespace" -> "identifier";
+
+    attrargcl1[label=<( balanced-token-seq<SUB>opt</SUB> )>];
+
+    "attribute-argument-clause" -> attrargcl1;
+
+    "balanced-token-seq" -> "balanced-token";
+    "balanced-token-seq" -> "balanced-token-seq balanced-token";
+
+    baltok1[label=<( balanced-token-seq<SUB>opt</SUB> )>];
+    baltok2[label=<[ balanced-token-seq<SUB>opt</SUB> ]>];
+    baltok3[label=<{ balanced-token-seq<SUB>opt</SUB> }>];
+
+    "balanced-token" -> baltok1;
+    "balanced-token" -> baltok2;
+    "balanced-token" -> baltok3;
+    "balanced-token" -> "any token other than a parenthesis, a bracket, or a brace";
+
+
+
+    # [module.init] ------------------------------------------------------------------
+
+    moddecl1[label=<export-keyword<SUB>opt</SUB> module-keyword module-name module-partition<SUB>opt</SUB> attribute-specifier-seq<SUB>opt</SUB> ;>];
+
+    "module-declaration" -> moddecl1;
+
+    modname1[label=<module-name-qualifier<SUB>opt</SUB> identifier>];
+
+    "module-name" -> modname1;
+
+    modpart1[label=<: module-name-qualifier<SUB>opt</SUB> identifier>];
+
+    "module-partition" -> modpart1;
+
+    "module-name-qualifier" -> "identifier .";
+    "module-name-qualifier" -> "module-name-qualifier identifier .";
+
+    exdecl1[label=<export { declaration-seq<SUB>opt</SUB> }>];
+
+    "export-declaration" -> export declaration;
+    "export-declaration" -> exdecl1;
+    "export-declaration" -> "export-keyword module-import-declaration";
+
+    imprtdecl1[label=<import-keyword module-name attribute-specifier-seq<SUB>opt</SUB> ;>];
+    imprtdecl2[label=<import-keyword module-partition attribute-specifier-seq<SUB>opt</SUB> ;>];
+    imprtdecl3[label=<import-keyword header-name attribute-specifier-seq<SUB>opt</SUB> ;>];
+
+    "module-import-declaration" -> imprtdecl1;
+    "module-import-declaration" -> imprtdecl2;
+    "module-import-declaration" -> imprtdecl3;
+
+    glmodfrag1[label=<module-keyword ; declaration-seq<SUB>opt</SUB>>]
+
+    "global-module-fragment" -> glmodfrag1;
+
+    privmodfrag1[label=<module-keyword : private ; declaration-seq<SUB>opt</SUB>>];
+
+    "private-module-fragment" -> privmodfrag1;
+
+    
+
+    # [class.pre] ------------------------------------------------------------------
+
+    "class-name" -> "identifier";
+    "class-name" -> "simple-template-id";
+
+    classpec1[label=<class-head { member-specification<SUB>opt</SUB> }>];
+
+    "class-specifier" -> classpec1;
+
+    classhd1[label=<class-key attribute-specifier-seq<SUB>opt</SUB> class-head-name class-virt-specifier<SUB>opt</SUB> base-clause<SUB>opt</SUB>>];
+    classhd2[label=<class-key attribute-specifier-seq<SUB>opt</SUB> base-clause<SUB>opt</SUB>>];
+
+    "class-head" -> classhd1;
+    "class-head" -> classhd2;
+
+    classhdnm1[label=<nested-name-specifier<SUB>opt</SUB> class-name>];
+
+    "class-head-name" -> classhdnm1;
+
+    "class-virt-specifier" -> "final";
+
+    "class-key" -> "class";
+    "class-key" -> "struct";
+    "class-key" -> "union";
+
+    memspec1[label=<member-declaration member-specification<SUB>opt</SUB>>];
+    memspec2[label=<access-specifier : member-specification<SUB>opt</SUB>>];
+
+    "member-specification" -> memspec1;
+    "member-specification" -> memspec2;
+
+    memdecl1[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq<SUB>opt</SUB> member-declarator-list<SUB>opt</SUB> ;>];
+
+    "member-declaration" -> memdecl1;
+    "member-declaration" -> "function-definition";
+    "member-declaration" -> "using-declaration";
+    "member-declaration" -> "using-enum-declaration";
+    "member-declaration" -> "static_assert-declaration";
+    "member-declaration" -> "template-declaration";
+    "member-declaration" -> "explicit-specialization";
+    "member-declaration" -> "deduction-guide";
+    "member-declaration" -> "alias-declaration";
+    "member-declaration" -> "opaque-enum-declaration";
+    "member-declaration" -> "empty-declaration";
+
+    "member-declarator-list" -> "member-declarator";
+    "member-declarator-list" -> "member-declarator-list , member-declarator";
+
+    memdecl1[label=<declarator virt-specifier-seq<SUB>opt</SUB> pure-specifier<SUB>opt</SUB>>];
+    memdecl2[label=<declarator brace-or-equal-initializer<SUB>opt</SUB>>];
+    memdecl3[label=<identifier<SUB>opt</SUB> attribute-specifier-seq<SUB>opt</SUB> : constant-expression brace-or-equal-initializer<SUB>opt</SUB>>];
+
+    "member-declarator" -> memdecl1;
+    "member-declarator" -> "declarator requires-clause";
+    "member-declarator" -> memdecl2;
+    "member-declarator" -> memdecl3;
+
+    "virt-specifier-seq" -> "virt-specifier";
+    "virt-specifier-seq" -> "virt-specifier-seq virt-specifier";
+
+    "virt-specifier" -> "override";
+    "virt-specifier" -> "final";
+
+    "pure-specifier" -> "= 0";
+
+    "conversion-function-id" -> "operator conversion-type-id";
+
+    convtpid1[label=<type-specifier-seq conversion-declarator<SUB>opt</SUB>>];
+
+    "conversion-type-id" -> convtpid1;
+
+    convdecl1[label=<ptr-operator conversion-declarator<SUB>opt</SUB>>];
+
+    "conversion-declarator" -> convdecl1;
+
+
+
+    # [class.derived] ------------------------------------------------------------------
+
+    "base-clause" -> "base-specifier-list";
+
+    basespecl1[label=<base-specifier ...<SUB>opt</SUB>>];
+    basespecl2[label=<base-specifier-list , base-specifier ...<SUB>opt</SUB>>];
+
+    "base-specifier-list" -> basespecl1;
+    "base-specifier-list" -> basespecl2;
+
+    basespec1[label=<attribute-specifier-seq<SUB>opt</SUB> class-or-decltype>];
+    basespec2[label=<attribute-specifier-seq<SUB>opt</SUB> virtual access-specifier<SUB>opt</SUB> class-or-decltype>];
+    basespec3[label=<attribute-specifier-seq<SUB>opt</SUB> access-specifier virtual<SUB>opt</SUB> class-or-decltype>];
+
+    "base-specifier" -> basespec1;
+    "base-specifier" -> basespec2;
+    "base-specifier" -> basespec3;
+
+    clasordecl1[label=<nested-name-specifier<SUB>opt</SUB> type-name&gt;>];
+
+    "class-or-decltype" -> clasordecl1;
+    "class-or-decltype" -> "nested-name-specifier template simple-template-id";
+    "class-or-decltype" -> "decltype-specifier";
+
+    "access-specifier" -> "private";
+    "access-specifier" -> "protected";
+    "access-specifier" -> "public";
+
+
+
+    # [class.base.init] ------------------------------------------------------------------
+
+    "ctor-initializer" -> ": mem-initializer-list";
+
+    meminitlist1[label=<mem-initializer ...<SUB>opt</SUB>>];
+    meminitlist2[label=<mem-initializer-list , mem-initializer ...<SUB>opt</SUB>>];
+
+    "mem-initializer-list" -> meminitlist1;
+    "mem-initializer-list" -> meminitlist2;
+
+    meminitl1[label=<mem-initializer-id ( expression-list<SUB>opt</SUB> )>];
+
+    "mem-initializer" -> meminitlist1;
+    "mem-initializer" -> "mem-initializer-id braced-init-list";
+
+    "mem-initializer-id" -> "class-or-decltype";
+    "mem-initializer-id" -> "identifier";
+
+
+
+    # [over.call.func] ------------------------------------------------------------------
+
+    "postfix-expression:" -> "postfix-expression . id-expression";
+    "postfix-expression:" -> "postfix-expression -> id-expression";
+    "postfix-expression:" -> "primary-expression";
+
+    "operator-function-id" -> "operator operator";
+
+    oper1[label=<new<BR/><BR/>delete<BR/><BR/>new[]<BR/><BR/>delete[]<BR/><BR/>co_await<BR/><BR/>()<BR/><BR/>[]<BR/><BR/>&rarr;<BR/><BR/>&rarr;*<BR/><BR/>~<BR/><BR/>!<BR/><BR/>+<BR/><BR/>-<BR/><BR/>*<BR/><BR/>/<BR/><BR/>%<BR/><BR/>^<BR/><BR/>&amp;<BR/><BR/>|<BR/><BR/>=<BR/><BR/>+=<BR/><BR/>-=<BR/><BR/>*=<BR/><BR/>/=<BR/><BR/>%=<BR/><BR/>^=<BR/><BR/>&amp;=<BR/><BR/>|=<BR/><BR/>==<BR/><BR/>!=<BR/><BR/>&lt;<BR/><BR/>&gt;<BR/><BR/>&lt;=<BR/><BR/>&gt;=<BR/><BR/>&lt;=&gt;<BR/><BR/>&amp;&amp;<BR/><BR/>||<BR/><BR/>&lt;&lt;<BR/><BR/>&gt;&gt;<BR/><BR/>&lt;&lt;=<BR/><BR/>&gt;&gt;=<BR/><BR/>++<BR/><BR/>--<BR/><BR/>,>];
+
+    "operator" -> oper1;
+
+
+
+    # [over.literal] ------------------------------------------------------------------
+
+    "literal-operator-id" -> "operator string-literal identifier";
+    "literal-operator-id" -> "operator user-defined-string-literal";
+
+
+
+    # [temp.pre] ------------------------------------------------------------------
+
+    tempdecl1[label=<template-head declaration<BR/><BR/>template-head concept-definition>];
+    "template-declaration" -> tempdecl1;
+
+    tmplh1[label=<template &lt; template-parameter-list &gt; requires-clause<SUB>opt</SUB>>];
+    "template-head" -> tmplh1;
+
+    tmplparl1[label=<template-parameter<BR/><BR/>template-parameter-list , template-parameter>];
+    "template-parameter-list" -> tmplparl1;
+
+    "requires-clause" -> "requires constraint-logical-or-expression";
+
+    constlogorexp1[label=<constraint-logical-and-expression<BR/><BR/>constraint-logical-or-expression || constraint-logical-and-expression>];
+    "constraint-logical-or-expression" -> constlogorexp1;
+
+    constlogandexp1[label=<primary-expression<BR/><BR/>constraint-logical-and-expression &amp;&amp; primary-expression>];
+    "constraint-logical-or-expression" -> constlogandexp1;
+
+
+
+    # [temp.param] ------------------------------------------------------------------
+
+    temppar1[label=<type-parameter<BR/><BR/>parameter-declaration>];
+    "template-parameter" -> temppar1;
+
+    typepar1[label=<type-parameter-key ...<SUB>opt</SUB> identifier<SUB>opt</SUB><BR/><BR/>type-parameter-key identifier<SUB>opt</SUB> = type-id<BR/><BR/>type-constraint ...<SUB>opt</SUB> identifier<SUB>opt</SUB><BR/><BR/>type-constraint identifier<SUB>opt</SUB> = type-id<BR/><BR/>template-head type-parameter-key ...<SUB>opt</SUB> identifier<SUB>opt</SUB><BR/><BR/>template-head type-parameter-key identifier<SUB>opt</SUB> = id-expression>];
+    "type-parameter" -> typepar1;
+
+    "type-parameter-key" -> "class";
+    "type-parameter-key" -> "typename";
+
+    tpcstr1[label=<nested-name-specifier<SUB>opt</SUB> concept-name<BR/><BR/>nested-name-specifier<SUB>opt</SUB> concept-name &lt; template-argument-list<SUB>opt</SUB> &gt;>];
+    "type-constraint" -> tpcstr1;
+
+
+
+    # [temp.names] ------------------------------------------------------------------
+
+    smtempid1[label=<template-name &lt; template-argument-list<SUB>opt</SUB> &gt;>];
+    "simple-template-id" -> smtempid1;
+
+    tmpid1[label=<simple-template-id<BR/><BR/>operator-function-id &lt; template-argument-list<SUB>opt</SUB> &gt;<BR/><BR/>literal-operator-id &lt; template-argument-list<SUB>opt</SUB> &gt;>];
+
+    "template-id" -> tmpid1;
+
+    "template-name" -> "identifier";
+
+    tmpargl1[label=<template-argument ...<SUB>opt</SUB><BR/><BR/>template-argument-list , template-argument ...<SUB>opt</SUB>>];
+    "template-argument-list" -> tmpargl1;
+
+    "template-argument" -> "constant-expression";
+    "template-argument" -> "type-id";
+    "template-argument" -> "id-expression";
+
+    dedgd1[label=<explicit-specifier<SUB>opt</SUB> template-name ( parameter-declaration-clause ) -&gt; simple-template-id ;>];
+    "deduction-guide" -> dedgd1;
+
+
+
+    # [temp.concept] ------------------------------------------------------------------
+
+    "concept-definition" -> "concept concept-name = constraint-expression ;";
+
+    "concept-name" -> "identifier";
+
+    explinstant1[label=<extern<SUB>opt</SUB> template declaration>];
+    "explicit-instantiation" -> explinstant1;
+
+
+
+    # [except.pre] ------------------------------------------------------------------
+
+    "try-block" -> "try compound-statement handler-seq";
+
+    functrblk1[label=<try ctor-initializer<SUB>opt</SUB> compound-statement handler-seq>];
+    "function-try-block" -> functrblk1;
+
+    hndseq1[label=<handler handler-seq<SUB>opt</SUB>>];
+    "handler-seq" -> hndseq1;
+
+    "handler" -> "catch ( exception-declaration ) compound-statement";
+
+    excpdecl1[label=<attribute-specifier-seq<SUB>opt</SUB> type-specifier-seq declarator<BR/><BR/>attribute-specifier-seq<SUB>opt</SUB> type-specifier-seq abstract-declarator<SUB>opt</SUB><BR/><BR/>...>];
+    "exception-declaration" -> excpdecl1;
+
+    "noexcept-specifier" -> "noexcept ( constant-expression )";
+    "noexcept-specifier" -> "noexcept";
+
+
+
+    # [cpp.pre] ------------------------------------------------------------------
 }
