@@ -6,6 +6,263 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
 
 
 
+    # [gram.key] ------------------------------------------------------------------
+
+    "typedef-name" -> "identifier";
+    "typedef-name" -> "simple-template-id"; 
+
+
+
+    # [gram.lex] ------------------------------------------------------------------
+
+    "hex-quad" -> "hexadecimal-digit hexadecimal-digit hexadecimal-digit hexadecimal-digit";
+
+    unchnm1[label=<\u hex-quad<BR/><BR/>
+\U hex-quad hex-quad>];
+    "universal-character-name" -> unchnm1;
+
+    pptok1[label=<header-name<BR/><BR/>
+import-keyword<BR/><BR/>
+module-keyword<BR/><BR/>
+export-keyword<BR/><BR/>
+identifier<BR/><BR/>
+pp-number<BR/><BR/>
+character-literal<BR/><BR/>
+user-defined-character-literal<BR/><BR/>
+string-literal<BR/><BR/>
+user-defined-string-literal<BR/><BR/>
+preprocessing-op-or-punc<BR/><BR/>
+each non-white-space character that cannot be one of the above>];
+    "preprocessing-token" -> pptok1;
+
+    tk1[label=<identifier<BR/><BR/>
+keyword<BR/><BR/>
+literal<BR/><BR/>
+operator-or-punctuator>];
+    "token" -> tk1;
+
+    hdname1[label=<h-char-sequence<BR/><BR/>
+&quot;q-char-sequence&quot;>];
+    "header-name" -> hdname1;
+
+    hchseq1[label=<h-char<BR/><BR/>
+h-char-sequence h-char>];
+    "h-char-sequence" -> hchseq1;
+
+    "h-char" -> "any member of the source character set except new-line and >";
+
+    qchseq1[label=<q-char<BR/><BR/>
+q-char-sequence q-char>];
+    "q-char-sequence" -> qchseq1;
+
+    "q-char" -> "any member of the source character set except new-line and ";
+
+    ppnum1[label=<digit<BR/><BR/>
+. digit<BR/><BR/>
+pp-number digit<BR/><BR/>
+pp-number identifier-nondigit<BR/><BR/>
+pp-number ’ digit<BR/><BR/>
+pp-number ’ nondigit<BR/><BR/>
+pp-number e sign<BR/><BR/>
+pp-number E sign<BR/><BR/>
+pp-number p sign<BR/><BR/>
+pp-number P sign<BR/><BR/>
+pp-number .>];
+    "pp-number" -> ppnum1;
+
+    ident1[label=<identifier-nondigit<BR/><BR/>
+identifier identifier-nondigit<BR/><BR/>
+identifier digit>];
+    "identifier" ->ident1;
+
+    identdig1[label=<nondigit<BR/><BR/>
+universal-character-name>];
+    "identifier-nondigit" -> identdig1;
+    
+    ltrl1[label=<integer-literal<BR/><BR/>
+character-literal<BR/><BR/>
+floating-point-literal<BR/><BR/>
+string-literal<BR/><BR/>
+boolean-literal<BR/><BR/>
+pointer-literal<BR/><BR/>
+user-defined-literal>];
+    "literal" -> ltrl1;
+
+    intglit1[label=<binary-literal integer-suffix<SUB>opt</SUB><BR/><BR/>
+octal-literal integer-suffix<SUB>opt</SUB>
+decimal-literal integer-suffix<SUB>opt</SUB>
+hexadecimal-literal integer-suffix<SUB>opt</SUB>>];
+    "integer-literal" -> intglit1;
+    
+    bnlit1[label=<0b binary-digit<BR/><BR/>
+0B binary-digit<BR/><BR/>
+binary-literal ’<SUB>opt</SUB> binary-digit>];
+    "binary-literal" -> bnlit1;
+    
+    octlit1[label=<0<BR/><BR/>
+octal-literal ’<SUB>opt</SUB> octal-digit>];
+    "octal-literal" -> octlit1;
+
+    declit1[label=<nonzero-digit
+decimal-literal ’<BR/><BR/> digit>];
+    "decimal-literal" -> declit1;
+ 
+    "hexadecimal-literal" -> "hexadecimal-prefix hexadecimal-digit-sequence";
+
+    "binary-digit" -> "one of [ 1 0] ";
+    
+    "octal-digit" -> "one of [ 0 1 2 3 4 5 6 7 ]";
+
+    intsuf1[label=<unsigned-suffix long-suffix<SUB>opt</SUB><BR/><BR/>
+unsigned-suffix long-long-suffix<SUB>opt</SUB><BR/><BR/>
+long-suffix unsigned-suffix<SUB>opt</SUB><BR/><BR/>
+long-long-suffix unsigned-suffix<SUB>opt</SUB>>];
+    "integer-suffix" -> intsuf1;
+
+    fplit1[label=<decimal-floating-point-literal<BR/><BR/>
+hexadecimal-floating-point-literal>];
+    "floating-point-literal" -> fplit1;
+
+    decfplit1[label=<fractional-constant exponent-part<SUB>opt</SUB> floating-point-suffix<SUB>opt</SUB><BR/><BR/>
+digit-sequence exponent-part floating-point-suffix<SUB>opt</SUB>>];
+    "decimal-floating-point-literal" -> decfplit1;
+
+    hexfplit1[label=<hexadecimal-prefix hexadecimal-fractional-constant binary-exponent-part floating-point-suffix<SUB>opt</SUB><BR/><BR/>
+hexadecimal-prefix hexadecimal-digit-sequence binary-exponent-part floating-point-suffix<SUB>opt</SUB>>];
+    "hexadecimal-floating-point-literal" -> hexfplit1;
+
+    fracconst1[label=<digit-sequence<SUB>opt</SUB> . digit-sequence<BR/><BR/>
+digit-sequence .>];
+    "fractional-constant" -> fracconst1;
+
+    hexfraconst1[label=<hexadecimal-digit-sequence<SUB>opt</SUB> . hexadecimal-digit-sequence<BR/><BR/>
+hexadecimal-digit-sequence .>];
+    "hexadecimal-fractional-constant" -> hexfraconst1;
+
+    expar1[label=<e sign<SUB>opt</SUB> digit-sequence<BR/><BR/>
+E sign<SUB>opt</SUB> digit-sequence>];
+    "exponent-part" -> expar1;
+
+    binexpar1[label=<p sign<SUB>opt</SUB> digit-sequence<BR/><BR/>
+P sign<SUB>opt</SUB> digit-sequence>];
+    "binary-exponent-part" -> binexpar1;
+
+    strlit1[label=<encoding-prefix<SUB>opt</SUB> " s-char-sequence<SUB>opt</SUB> "<BR/><BR/>
+encoding-prefix<SUB>opt</SUB> R raw-string>];
+    "string-literal" -> strlit1;
+
+    schseq1[label=<s-char<BR/><BR/>
+s-char-sequence s-char>];
+    "s-char-sequence" -> schseq1;
+
+    schst1[label=<any member of the basic source character set except the double-quote ", backslash \, or new-line character<BR/><BR/>
+escape-sequence<BR/><BR/>
+universal-character-name>];
+    "s-char" -> schst1;
+
+    rwstr1[label=<d-char-sequence<SUB>opt</SUB> ( r-char-sequence<SUB>opt</SUB> ) d-char-sequence<SUB>opt</SUB>>];
+    "raw-string" -> rwstr1;
+
+    rchseq1[label=<r-char<BR/><BR/>
+r-char-sequence r-char>];
+    "r-char-sequence" -> rchseq1;
+
+    rchr1[label=<any member of the source character set, except a right parenthesis ) followed by<BR/><BR/>
+the initial d-char-sequence (which may be empty) followed by a double quote ".>];
+    "r-char" -> rchr1;
+
+    dchseq1[label=<d-char<BR/><BR/>
+d-char-sequence d-char>];
+    "d-char-sequence" -> dchseq1;
+
+    dchr1[label=<any member of the basic source character set except:<BR/><BR/>
+space, the left parenthesis (, the right parenthesis ), the backslash \, and the control characters<BR/><BR/>
+representing horizontal tab, vertical tab, form feed, and newline.>];
+    "d-char" -> "dchr1";
+
+    "pointer-literal" -> "nullptr";
+
+    usrdeflit1[label=<user-defined-integer-literal<BR/><BR/>
+user-defined-floating-point-literal<BR/><BR/>
+user-defined-string-literal<BR/><BR/>
+user-defined-character-literal>];
+    "user-defined-literal" -> usrdeflit1;
+
+    usrdefintlit1[label=<decimal-literal ud-suffix<BR/><BR/>
+octal-literal ud-suffix<BR/><BR/>
+hexadecimal-literal ud-suffix<BR/><BR/>
+binary-literal ud-suffix>];
+    "user-defined-integer-literal" -> usrdefintlit1;
+    
+    usrdeffplit1[label=<fractional-constant exponent-part<SUB>opt</SUB> ud-suffix<BR/><BR/>
+digit-sequence exponent-part ud-suffix<BR/><BR/>
+hexadecimal-prefix hexadecimal-fractional-constant binary-exponent-part ud-suffix<BR/><BR/>
+hexadecimal-prefix hexadecimal-digit-sequence binary-exponent-part ud-suffix>];
+    "user-defined-floating-point-literal" -> usrdeffplit1;
+    
+    "user-defined-string-literal" -> "string-literal ud-suffix";
+
+    "user-defined-character-literal" -> "character-literal ud-suffix";
+
+    "ud-suffix" -> "identifier";
+
+
+
+    # [gram.expr] ------------------------------------------------------------------
+
+    primexpr1[label=<literal<BR/><BR/>
+this<BR/><BR/>
+( expression )<BR/><BR/>
+id-expression<BR/><BR/>
+lambda-expression<BR/><BR/>
+fold-expression<BR/><BR/>
+requires-expression>];
+    "primary-expression" -> primexpr1;
+
+    idexpr1[label=<unqualified-id<BR/><BR/>
+qualified-id>];
+    "id-expression" -> idexpr1;
+
+    unqualexpr1[label=<identifier<BR/><BR/>
+operator-function-id<BR/><BR/>
+conversion-function-id<BR/><BR/>
+literal-operator-id<BR/><BR/>
+~ type-name<BR/><BR/>
+~ decltype-specifier<BR/><BR/>
+template-id>];
+    "unqualified-id" -> unqualexpr1;
+
+    qualid1[label=<nested-name-specifier template<SUB><SUB>opt</SUB></SUB> unqualified-id>];
+    "qualified-id" -> qualid1;
+
+    nestnmspec1[label=<::
+type-name ::<BR/><BR/>
+namespace-name ::<BR/><BR/>
+decltype-specifier ::<BR/><BR/>
+nested-name-specifier identifier ::<BR/><BR/>
+nested-name-specifier template<SUB><SUB>opt</SUB></SUB> simple-template-id ::>];
+    "nested-name-specifier" -> nestnmspec1;
+    
+    lmexpr1 [label=<lambda-introducer lambda-declarator<SUB>opt</SUB> compound-statement<BR/><BR/>
+lambda-introducer &lt; template-parameter-list &gt; requires-clause<SUB>opt</SUB> lambda-declarator<SUB>opt</SUB> compound-statement>];
+    "lambda-expression" -> lmexpr1;
+    
+    lmintr1[label=<[ lambda-capture<SUB>opt</SUB> ]>];
+    "lambda-introducer" -> lmintr1;
+
+    lmdecl1[label=<( parameter-declaration-clause ) decl-specifier-seq<SUB>opt</SUB><BR/><BR/>
+noexcept-specifier<SUB>opt</SUB> attribute-specifier-seq<SUB>opt</SUB> trailing-return-type<SUB>opt</SUB> requires-clause<SUB>opt</SUB>>];
+    "lambda-declarator" -> lmdecl1;
+
+    lmcap1[label=<capture-default<BR/><BR/>
+capture-list<BR/><BR/>
+capture-default , capture-list>];
+    "lambda-capture" -> lmcap1;
+
+    "capture-default";
+
+
+
     # [stmt.pre] ------------------------------------------------------------------
 
     statement1[label=<attribute-specifier-seq<SUB>opt</SUB> try-block>]
@@ -247,7 +504,7 @@ nested-name-specifier * attribute-specifier-seq<SUB>opt</SUB> cv-qualifier-seq<S
     "abstract-declarator" -> abstrdecl1;
     "abstract-declarator" -> "abstract-pack-declarator";
 
-    ptrabstrdecl1[label=<ptr-operator ptr-abstract-declaratoropt>];
+    ptrabstrdecl1[label=<ptr-operator ptr-abstract-declarator<SUB>opt</SUB>>];
     "ptr-abstract-declarator" -> "noptr-abstract-declarator"
     "ptr-abstract-declarator" -> ptrabstrdecl1;
 
@@ -259,7 +516,7 @@ noptr-abstract-declarator<SUB>opt</SUB> [ constant-expression<SUB>opt</SUB> ] at
     "abstract-pack-declarator" -> "noptr-abstract-pack-declarator"; 
     "abstract-pack-declarator" -> "ptr-operator abstract-pack-declarator";
 
-    noptrabspackdecl1[label=<noptr-abstract-pack-declarator [ constant-expressionopt ] attribute-specifier-seqopt<BR/><BR/>
+    noptrabspackdecl1[label=<noptr-abstract-pack-declarator [ constant-expression<SUB>opt</SUB> ] attribute-specifier-seq<SUB>opt</SUB><BR/><BR/>
 noptr-abstract-pack-declarator parameters-and-qualifiers<BR/><BR/>
 . . .>];
     "noptr-abstract-pack-declarator" -> noptrabspackdecl1;
@@ -600,7 +857,7 @@ mem-initializer-id braced-init-list>];
 postfix-expression -&gt; id-expression<BR/><BR/>
 primary-expression>];
 
-    "postfix-expression:" -> pstexpr1;
+    "postfix-expression" -> pstexpr1;
 
     "operator-function-id" -> "operator operator";
 
@@ -654,7 +911,7 @@ co_await<BR/><BR/>
 
     # [over.literal] ------------------------------------------------------------------
 
-    liopid1[lable=<operator string-literal identifier<BR/><BR/>
+    liopid1[label=<operator string-literal identifier<BR/><BR/>
 operator user-defined-string-literal>];
     "literal-operator-id" -> liopid1;
 
