@@ -28,19 +28,15 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "init-statement" -> "simple-declaration";
 
     condition1[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq declarator brace-or-equal-initializer>]
-    condition -> "expression";
-    condition -> condition1;
+    "condition" -> "expression";
+    "condition" -> condition1;
 
-    labeledstm1[label=<attribute-specifier-seq<SUB>opt</SUB> identifier : statement>]
-    labeledstm2[label=<attribute-specifier-seq<SUB>opt</SUB> case constant-expression : statement>]
-    labeledstm3[label=<attribute-specifier-seq<SUB>opt</SUB> default : statement>]
-
+    labeledstm1[label=<attribute-specifier-seq<SUB>opt</SUB> identifier : statement<BR/><BR/>
+attribute-specifier-seq<SUB>opt</SUB> case constant-expression : statement<BR/><BR/>
+attribute-specifier-seq<SUB>opt</SUB> default : statement>]
     "labeled-statement" -> labeledstm1;
-    "labeled-statement" -> labeledstm2;
-    "labeled-statement" -> labeledstm3;
 
     expressionstm1[label=<expression<SUB>opt</SUB>>];
-    
     "expression-statement" -> expressionstm1;
 
     compoundstm1[label=<{ statement-seq<SUB>opt</SUB> } >];
@@ -49,31 +45,24 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "statement-seq" -> statement;
     "statement-seq" -> "statement-seq statement"
 
-    selectionstm1[label=<if constexpr<SUB>opt</SUB> ( init-statement<SUB>opt</SUB> condition ) statement>];
-    selectionstm2[label=<if constexpr<SUB>opt</SUB>( init-statement<SUB>opt</SUB> condition ) statement else statement>];
-    selectionstm3[label=<switch ( init-statement<SUB>opt</SUB> condition ) statement>];
-
+    selectionstm1[label=<if constexpr<SUB>opt</SUB> ( init-statement<SUB>opt</SUB> condition ) statement<BR/><BR/>
+if constexpr<SUB>opt</SUB>( init-statement<SUB>opt</SUB> condition ) statement else statement<BR/><BR/>
+switch ( init-statement<SUB>opt</SUB> condition ) statement>];
     "selection-statement" -> selectionstm1;
-    "selection-statement" -> selectionstm2;
-    "selection-statement" -> selectionstm3;
 
 
 
     # [stmt.iter] ------------------------------------------------------------------
 
-    iterationsmt1[label=<for ( init-statement condition<SUB>opt</SUB> ; expression<SUB>opt</SUB> ) statement>];
-    iterationsmt2[label=<for ( init-statement<SUB>opt</SUB> for-range-declaration : for-range-initializer ) statement>]
-    
+    iterationsmt1[label=<for ( init-statement condition<SUB>opt</SUB> ; expression<SUB>opt</SUB> ) statement<BR/><BR/>
+for ( init-statement<SUB>opt</SUB> for-range-declaration : for-range-initializer ) statement<BR/><BR/>
+while ( condition ) statement<BR/><BR/>
+do statement while ( expression ) ;>];
     "iterator-statement" -> iterationsmt1;
-    "iterator-statement" -> iterationsmt2;
-    "iteration-statement" -> "while ( condition ) statement";
-    "iteration-statement" -> "do statement while ( expression ) ;";
 
-    forrdecl1[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq declarator>]
-    forrdecl2[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq ref-qualifier<SUB>opt</SUB> [ identifier-list ]>]
-
+    forrdecl1[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq declarator<BR/><BR/>
+attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq ref-qualifier<SUB>opt</SUB> [ identifier-list ]>];
     "for-range-declaration" -> forrdecl1;
-    "for-range-declaration" -> forrdecl2;
 
     "for-range-initializer" -> "expr-or-braced-init-list"
 
@@ -114,16 +103,14 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     aliasdecl1[label=<using identifier attribute-specifier-seq<SUB>opt</SUB> = defining-type-id ;>]
     "alias-declaration" -> aliasdecl1;
 
-    simpldecl1[label=<decl-specifier-seq init-declarator-list<SUB>opt</SUB> ;>];
-    simpldecl2[label=<attribute-specifier-seq decl-specifier-seq init-declarator-list ;>];
-    simpldecl3[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq ref-qualifier<SUB>opt</SUB> [ identifier-list ] initializer ;>];
-
+    simpldecl1[label=<decl-specifier-seq init-declarator-list<SUB>opt</SUB> ;<BR/><BR/>
+attribute-specifier-seq decl-specifier-seq init-declarator-list ;<BR/><BR/>
+attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq ref-qualifier<SUB>opt</SUB> [ identifier-list ] initializer ;>];
     "simple-declaration" -> simpldecl1;
-    "simple-declaration" -> simpldecl2;
-    "simple-declaration" -> simpldecl3;
 
-    "static_assert-declaration" -> "static_assert ( constant-expression ) ;";
-    "static_assert-declaration" -> "static_assert ( constant-expression , string-literal ) ;";
+    statasrtdecl1[label=<static_assert ( constant-expression ) <BR/><BR/>
+static_assert ( constant-expression , string-literal ) ;;>]
+    "static_assert-declaration" -> statasrtdecl1;
     
     "empty-declaration" -> ";";
 
@@ -143,10 +130,9 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "decl-specifier" -> constinit;
     "decl-specifier" -> inline;
 
-    declspecseq1[label=<decl-specifier attribute-specifier-seq<SUB>opt</SUB>>];
-
+    declspecseq1[label=<decl-specifier attribute-specifier-seq<SUB>opt</SUB><BR/><BR/>
+decl-specifier decl-specifier-seq>];
     "decl-specifier-seq" -> "declspecseq1";
-    "decl-specifier-seq" -> "decl-specifier decl-specifier-seq";
 
     "function-specifier" -> virtual;
     "function-specifier" -> "explicit-specifier";
@@ -166,43 +152,36 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "type-specifier" -> "typename-specifier";
     "type-specifier" -> "cv-qualifier";
 
-    typespecseq1[label=<type-specifier attribute-specifier-seq<SUB>opt</SUB>>]
-
+    typespecseq1[label=<type-specifier attribute-specifier-seq<SUB>opt</SUB><BR/><BR/>
+type-specifier type-specifier-seq>];
     "type-specifier-seq" -> typespecseq1;
-    "type-specifier-seq" -> "type-specifier type-specifier-seq";
 
     "defining-type-specifier" -> "type-specifier";
     "defining-type-specifier" -> "class-specifier";
     "defining-type-specifier" -> "enum-specifier";
 
-    definingtypespecseq1[label=<defining-type-specifier attribute-specifier-seq<SUB>opt</SUB>>];
-
+    definingtypespecseq1[label=<defining-type-specifier attribute-specifier-seq<SUB>opt</SUB><BR/><BR/>
+defining-type-specifier defining-type-specifier-seq<BR/><BR/>>];
     "defining-type-specifier-seq" -> definingtypespecseq1;
-    "defining-type-specifier-seq" -> "defining-type-specifier defining-type-specifier-seq";
     
     "type-name" -> "class-name";
     "type-name" -> "enum-name";
     "type-name" -> "typedef-name";
 
-    elaboratedtpspec1[label=<class-key attribute-specifier-seq<SUB>opt</SUB> nested-name-specifier<SUB>opt</SUB> identifier>];
-    elaboratedtpspec2[label=<class-key nested-name-specifier template<SUB>opt</SUB> simple-template-id>];
-
+    elaboratedtpspec1[label=<class-key attribute-specifier-seq<SUB>opt</SUB> nested-name-specifier<SUB>opt</SUB> identifier;<BR/><BR/>
+class-key nested-name-specifier template<SUB>opt</SUB> simple-template-id<BR/><BR/>
+class-key simple-template-id>];
     "elaborated-type-specifier" -> elaboratedtpspec1;
-    "elaborated-type-specifier" -> "class-key simple-template-id";
-    "elaborated-type-specifier" -> elaboratedtpspec2;
     "elaborated-type-specifier" -> "elaborated-enum-specifier";
 
     elaboratedenspec1[label=<enum nested-name-specifier<SUB>opt</SUB> identifier>];
-
     "elaborated-enum-specifier" -> elaboratedenspec1;
 
     "decltype-specifier" -> "decltype ( expression )";
 
-    placeholdtpspec1[label=<type-constraint<SUB>opt</SUB> auto>];
-    placeholdtpspec2[label=<type-constraint<SUB>opt</SUB> decltype ( auto )>];
-
+    placeholdtpspec1[label=<type-constraint<SUB>opt</SUB> auto<BR/><BR/>
+type-constraint<SUB>opt</SUB> decltype ( auto )>];
     "placeholder-type-specifier" -> placeholdtpspec1;
-    "placeholder-type-specifier" -> placeholdtpspec2;
 
 
 
@@ -211,10 +190,10 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "init-declarator-list" -> "init-declarator";
     "init-declarator-list" -> "init-declarator-list , init-declarator";
 
-    initdecl1[label=<declarator initializer<SUB>opt</SUB>>];
+    initdecl1[label=<declarator initializer<SUB>opt</SUB><BR/><BR/>
+declarator requires-clause>];
 
     "init-declarator" -> initdecl1;
-    "init-declarator" -> "declarator requires-clause";
 
     "declarator" -> "ptr-declarator";
     "declarator" -> "noptr-declarator parameters-and-qualifiers trailing-return-type";
@@ -222,45 +201,35 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "ptr-declarator" -> "noptr-declarator";
     "ptr-declarator" -> "ptr-operator ptr-declarator";
 
-    noptrdecl1[label=<declarator-id attribute-specifier-seq<SUB>opt</SUB>>];
-    noptrdecl2[label=<noptr-declarator [ constant-expression<SUB>opt</SUB> ] attribute-specifier-seq<SUB>opt</SUB>>];
-
+    noptrdecl1[label=<declarator-id attribute-specifier-seq<SUB>opt</SUB><BR/><BR/>
+noptr-declarator [ constant-expression<SUB>opt</SUB> ] attribute-specifier-seq<SUB>opt</SUB><BR/><BR/>
+noptr-declarator parameters-and-qualifiers<BR/><BR/>
+( ptr-declarator )>];
     "noptr-declarator" -> noptrdecl1;
-    "noptr-declarator" -> "noptr-declarator parameters-and-qualifiers";
-    "noptr-declarator" -> noptrdecl2;
-    "noptr-declarator" -> "( ptr-declarator )";
 
-    parametersqual1[label=<( parameter-declaration-clause ) cv-qualifier-seq<SUB>opt</SUB>>];
-    parametersqual2[label=<ref-qualifier<SUB>opt</SUB> noexcept-specifier<SUB>opt</SUB> attribute-specifier-seq<SUB>opt</SUB>>];
+    parametersqual1[label=<( parameter-declaration-clause ) cv-qualifier-seq<SUB>opt</SUB><BR/><BR/>
+ref-qualifier<SUB>opt</SUB> noexcept-specifier<SUB>opt</SUB> attribute-specifier-seq<SUB>opt</SUB>>];
 
     "parameters-and-qualifiers" -> parametersqual1;
-    "parameters-and-qualifiers" -> parametersqual2;
 
     "trailing-return-type" -> "-> type-id";
 
-    ptrop1[label=<* attribute-specifier-seq<SUB>opt</SUB> cv-qualifier-seq<SUB>opt</SUB>>];
-    ptrop2[label=<&amp; attribute-specifier-seq<SUB>opt</SUB>>];
-    ptrop3[label=<&amp;&amp; attribute-specifier-seq<SUB>opt</SUB>>];
-    ptrop4[label=<nested-name-specifier * attribute-specifier-seq<SUB>opt</SUB> cv-qualifier-seq<SUB>opt</SUB>>];
-
+    ptrop1[label=<* attribute-specifier-seq<SUB>opt</SUB> cv-qualifier-seq<SUB>opt</SUB><BR/><BR/>
+&amp; attribute-specifier-seq<SUB>opt</SUB><BR/><BR/>
+&amp;&amp; attribute-specifier-seq<SUB>opt</SUB><BR/><BR/>
+nested-name-specifier * attribute-specifier-seq<SUB>opt</SUB> cv-qualifier-seq<SUB>opt</SUB>>];
     "ptr-operator" -> ptrop1; 
-    "ptr-operator" -> ptrop2;
-    "ptr-operator" -> ptrop3;
-    "ptr-operator" -> ptrop4;
 
     cvqualseq1[label=<cv-qualifier cv-qualifier-seq<SUB>opt</SUB>>];
-
     "cv-qualifier-seq" -> cvqualseq1;
 
     "cv-qualifier" -> "const";
     "cv-qualifier" -> "volatile";
 
-    refqual1[label=<...&amp;<SUB>opt</SUB><BR/><BR/>&amp;&amp;>];
-
+    refqual1[label=<. . .&amp;<SUB>opt</SUB><BR/><BR/>&amp;&amp;>];
     "ref-qualifier" -> refqual1;
 
     declid1[label=<id-expression>];
-    
     "declarator-id" -> declid1;
 
 
@@ -268,58 +237,46 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     # [dcl.name] ------------------------------------------------------------------
     
     typeid1[label=<type-specifier-seq abstract-declarator<SUB>opt</SUB>>]
-
     "type-id" -> typeid1;
 
     deftypeid1[label=<defining-type-specifier-seq abstract-declarator<SUB>opt</SUB>>]
-
     "defining-type-id" -> deftypeid1;
 
     abstrdecl1[label=<noptr-abstract-declarator<SUB>opt</SUB> parameters-and-qualifiers trailing-return-type>]
-
     "abstract-declarator" -> "ptr-abstract-declarator";
     "abstract-declarator" -> abstrdecl1;
     "abstract-declarator" -> "abstract-pack-declarator";
 
     ptrabstrdecl1[label=<ptr-operator ptr-abstract-declaratoropt>];
-
     "ptr-abstract-declarator" -> "noptr-abstract-declarator"
     "ptr-abstract-declarator" -> ptrabstrdecl1;
 
-    noptrabstdecl1[label=<noptr-abstract-declarator<SUB>opt</SUB> parameters-and-qualifiers>];
-    noptrabstdecl2[label=<noptr-abstract-declarator<SUB>opt</SUB> [ constant-expression<SUB>opt</SUB> ] attribute-specifier-seqo<SUB>opt</SUB>>];
-
+    noptrabstdecl1[label=<noptr-abstract-declarator<SUB>opt</SUB> parameters-and-qualifiers<BR/><BR/>
+noptr-abstract-declarator<SUB>opt</SUB> [ constant-expression<SUB>opt</SUB> ] attribute-specifier-seqo<SUB>opt</SUB><BR/><BR/>
+( ptr-abstract-declarator )>];
     "noptr-abstract-declarator" -> noptrabstdecl1;
-    "noptr-abstract-declarator" -> noptrabstdecl2;
-    "noptr-abstract-declarator" -> "( ptr-abstract-declarator )";
 
     "abstract-pack-declarator" -> "noptr-abstract-pack-declarator"; 
     "abstract-pack-declarator" -> "ptr-operator abstract-pack-declarator";
 
-    noptrabspackdecl1[label=<noptr-abstract-pack-declarator [ constant-expressionopt ] attribute-specifier-seqopt>];
-
-    "noptr-abstract-pack-declarator" -> "noptr-abstract-pack-declarator parameters-and-qualifiers";
+    noptrabspackdecl1[label=<noptr-abstract-pack-declarator [ constant-expressionopt ] attribute-specifier-seqopt<BR/><BR/>
+noptr-abstract-pack-declarator parameters-and-qualifiers<BR/><BR/>
+. . .>];
     "noptr-abstract-pack-declarator" -> noptrabspackdecl1;
-    "noptr-abstract-pack-declarator" -> "...";
 
 
 
     # [dcl.fct] ------------------------------------------------------------------
 
-    parameterdeclclause1[label=<parameter-declaration-list<SUB>opt</SUB> ...<SUB>opt</SUB>>]
-
+    parameterdeclclause1[label=<parameter-declaration-list<SUB>opt</SUB> . . .<SUB>opt</SUB><BR/><BR/>
+parameter-declaration-list , . . .>];
     "parameter-declaration-clause" -> parameterdeclclause1;
-    "parameter-declaration-clause" -> "parameter-declaration-list , ...";
 
-    pardecl1[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq declarator>];
-    pardecl2[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq declarator = initializer-clause>];
-    pardecl3[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq abstract-declarator<SUB>opt</SUB>>];
-    pardecl4[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq abstract-declarator<SUB>opt</SUB> = initializer-clause>];
-
+    pardecl1[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq declarator<BR/><BR/>
+attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq declarator = initializer-clause<BR/><BR/>
+attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq abstract-declarator<SUB>opt</SUB><BR/><BR/>
+attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq abstract-declarator<SUB>opt</SUB> = initializer-clause>];
     "parameter-declaration" -> pardecl1;
-    "parameter-declaration" -> pardecl2;
-    "parameter-declaration" -> pardecl3;
-    "parameter-declaration" -> pardecl4;
 
 
 
@@ -334,18 +291,15 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "initializer-clause" -> "assignment-expression";
     "initializer-clause" -> "braced-init-list";
 
-    brinitl1[label=<{ initializer-list ,<SUB>opt</SUB> }>];
-    brinitl2[label=<{ designated-initializer-list ,<SUB>opt</SUB> }>];
+    brinitl1[label=<{ initializer-list ,<SUB>opt</SUB> }<BR/><BR/>
+{ designated-initializer-list ,<SUB>opt</SUB> }<BR/><BR/>
+{}>];
 
     "braced-init-list" -> brinitl1;
-    "braced-init-list" -> brinitl2;
-    "braced-init-list" -> "{}";
 
-    initl1[label=<initializer-clause ...<SUB>opt</SUB>>];
-    initl2[label=<initializer-list , initializer-clause ...<SUB>opt</SUB>>];
-
+    initl1[label=<initializer-clause . . .<SUB>opt</SUB><BR/><BR/>
+initializer-list , initializer-clause . . .<SUB>opt</SUB>>];
     "initializer-list" -> initl1;
-    "initializer-list" -> initl2;
 
     "designated-initializer-list" -> "designated-initializer-clause"; 
     "designated-initializer-list" -> "designated-initializer-list , designated-initializer-clause";
@@ -354,21 +308,18 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
 
     "designator" -> ". identifier";
 
-    "expr-or-braced-init-list" -> expression;
+    "expr-or-braced-init-list" -> "expression";
     "expr-or-braced-init-list" -> "braced-init-list";
 
 
 
     # [dcl.fct.def] ------------------------------------------------------------------
     
-    funcdecl1[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq<SUB>opt</SUB> declarator virt-specifier-seq<SUB>opt</SUB> function-body>];
-    funcdecl2[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq<SUB>opt</SUB> declarator requires-clause function-body>];
-
+    funcdecl1[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq<SUB>opt</SUB> declarator virt-specifier-seq<SUB>opt</SUB> function-body<BR/><BR/>
+attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq<SUB>opt</SUB> declarator requires-clause function-body>];
     "function-definition" -> funcdecl1;
-    "function-definition" -> funcdecl2;
 
     funcbd1[label=<ctor-initializer<SUB>opt</SUB> compound-statement>];
-
     "function-body" -> funcbd1;
     "function-body" -> "function-try-block";
     "function-body" -> "= default ;";
@@ -379,26 +330,22 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     # [dcl.enum] ------------------------------------------------------------------
     
     "enum-name" -> "identifier";
-
     enumspec1[label=<enum-head { enumerator-list<SUB>opt</SUB> }>];
 
     "enum-specifier" -> enumspec1;
     "enum-specifier" -> "enum-head { enumerator-list , }";
 
     enumh1[label=<enum-key attribute-specifier-seqopt enum-head-name<SUB>opt</SUB> enum-base<SUB>opt</SUB>>];
-
     "enum-head" -> enumh1;
 
     enumname1[label=<nested-name-specifier<SUB>opt</SUB> identifier>];
-
     "enum-head-name" -> enumname1;
 
     opaqueendecl1[label=<enum-key attribute-specifier-seq<SUB>opt</SUB> enum-head-name enum-base<SUB>opt</SUB> ;">];
-
     "opaque-enum-declaration" -> opaqueendecl1;
 
     "enum-key" -> "enum";
-    "enum-key" -> "enum clas";
+    "enum-key" -> "enum class";
     "enum-key" -> "enum struct";
 
     "enum-base" -> "type-specifier-seq";
@@ -410,7 +357,6 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "enumerator-definition" -> "enumerator = constant-expression";
 
     enumer1[label=<identifier attribute-specifier-seq<SUB>opt</SUB>>];
-    
     enumerator -> enumer1;
 
 
@@ -425,24 +371,19 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "namespace-definition" -> "nested-namespace-definition";
 
     namespacedef1[label=<inline<SUB>opt</SUB> namespace attribute-specifier-seq<SUB>opt</SUB> identifier { namespace-body }>];
-    
     "named-namespace-definition" -> namespacedef1;
 
     unnamenamdef1[label=<inline<SUB>opt</SUB> namespace attribute-specifier-seq<SUB>opt</SUB> { namespace-body }>]
-    
     "unnamed-namespace-definition" -> unnamenamdef1;
 
     nsnamenamdef1[label=<namespace enclosing-namespace-specifier :: inline<SUB>opt</SUB> identifier { namespace-body }>];
-
     "nested-namespace-definition" -> nsnamenamdef1;
 
     encnamespec1[label=<nested-namespace-definition :>];
-
     "enclosing-namespace-specifier" -> "identifier";
     "enclosing-namespace-specifier" -> encnamespec1;
 
     nsbody1[label=<declaration-seq<SUB>opt</SUB>>];
-
     "namespace-body" -> nsbody1;
 
 
@@ -450,61 +391,48 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     # [namespace.alias] ------------------------------------------------------------------
 
     "namespace-alias" -> "identifier;"
-
     "namespace-alias-definition" -> "namespace identifier = qualified-namespace-specifier ;"
 
     qualnsspec1[label=<nested-name-specifier<SUB>opt</SUB> namespace-name>]
-
     "qualified-namespace-specifier" -> qualnsspec1;
 
-    usdirns1[label=<attribute-specifier-seqopt using namespace nested-name-specifier<SUB>opt</SUB> namespace-name ;>];
-
+    usdirns1[label=<attribute-specifier-seq<SUB>opt</SUB> using namespace nested-name-specifier<SUB>opt</SUB> namespace-name ;>];
     "using-directive" -> usdirns1;
 
     "using-declaration" -> "using using-declarator-list ;";
 
-    usdeclist1[label=<using-declarator ...<SUB>opt</SUB>>]; 
-    usdeclist2[label=<using-declarator-list , using-declarator ...<SUB>opt</SUB>>];
-
+    usdeclist1[label=<using-declarator . . .<SUB>opt</SUB><BR/><BR/>
+using-declarator-list , using-declarator . . .<SUB>opt</SUB>>];
     "using-declarator-list" -> usdeclist1;
-    "using-declarator-list" -> usdeclist2;
 
-    linkspec1[label=<extern string-literal { declaration-seq<SUB>opt</SUB> }>];
-
+    linkspec1[label=<extern string-literal { declaration-seq<SUB>opt</SUB> }<BR/><BR/>
+extern string-literal declaration>];
     "linkage-specification" -> linkspec1;
-    "linkage-specification" -> "extern string-literal declaration";
 
 
 
     # [dcl.attr] ------------------------------------------------------------------
 
     attrspecseq1[label=<attribute-specifier-seq<SUB><SUB>opt</SUB></SUB> attribute-specifier>];
-
     "attribute-specifier-seq" -> attrspecseq1;
 
     attrspec1[label=<[ [ attribute-using-prefix<SUB>opt</SUB> attribute-list ] ]>];
-
     "attribute-specifier" -> attrspec1;
     "attribute-specifier" -> "alignment-specifier";
 
-    allignspec1[label=<alignas ( type-id ...<SUB>opt</SUB> )>];
-    allignspec2[label=<alignas ( constant-expression ...<SUB>opt</SUB> )>];
-
+    allignspec1[label=<alignas ( type-id . . .<SUB>opt</SUB> )<BR/><BR/>
+alignas ( constant-expression . . .<SUB>opt</SUB> )>];
     "alignment-specifier" -> allignspec1;
-    "alignment-specifier" -> allignspec2;
 
     "attribute-using-prefix" -> "using attribute-namespace";
 
-    attrl1[label=<attribute-list<SUB>opt</SUB>>];
-    attrl2[label=<attribute-list , attribute<SUB>opt</SUB>>];
-
+    attrl1[label=<attribute-list<SUB>opt</SUB><BR/><BR/>
+attribute-list , attribute<SUB>opt</SUB>
+attribute-list , attribute . . .<BR/><BR/>
+attribute . . .>];
     "attribute-list" -> attrl1; 
-    "attribute-list" -> attrl2;
-    "attribute-list" -> "attribute ...";
-    "attribute-list" -> "attribute-list , attribute ...";
 
     attr1[label=<attribute-token attribute-argument-clause<SUB>opt</SUB>>];
-
     "attribute" -> attr1;
 
     "attribute-token" -> identifier;
@@ -515,60 +443,47 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "attribute-namespace" -> "identifier";
 
     attrargcl1[label=<( balanced-token-seq<SUB>opt</SUB> )>];
-
     "attribute-argument-clause" -> attrargcl1;
 
     "balanced-token-seq" -> "balanced-token";
     "balanced-token-seq" -> "balanced-token-seq balanced-token";
 
-    baltok1[label=<( balanced-token-seq<SUB>opt</SUB> )>];
-    baltok2[label=<[ balanced-token-seq<SUB>opt</SUB> ]>];
-    baltok3[label=<{ balanced-token-seq<SUB>opt</SUB> }>];
-
+    baltok1[label=<( balanced-token-seq<SUB>opt</SUB> )<BR/><BR/>
+[ balanced-token-seq<SUB>opt</SUB> ]<BR/><BR/>
+{ balanced-token-seq<SUB>opt</SUB> }<BR/><BR/>
+any token other than a parenthesis, a bracket, or a brace>];
     "balanced-token" -> baltok1;
-    "balanced-token" -> baltok2;
-    "balanced-token" -> baltok3;
-    "balanced-token" -> "any token other than a parenthesis, a bracket, or a brace";
 
 
 
     # [module.init] ------------------------------------------------------------------
 
     moddecl1[label=<export-keyword<SUB>opt</SUB> module-keyword module-name module-partition<SUB>opt</SUB> attribute-specifier-seq<SUB>opt</SUB> ;>];
-
     "module-declaration" -> moddecl1;
 
     modname1[label=<module-name-qualifier<SUB>opt</SUB> identifier>];
-
     "module-name" -> modname1;
 
     modpart1[label=<: module-name-qualifier<SUB>opt</SUB> identifier>];
-
     "module-partition" -> modpart1;
 
     "module-name-qualifier" -> "identifier .";
     "module-name-qualifier" -> "module-name-qualifier identifier .";
 
-    exdecl1[label=<export { declaration-seq<SUB>opt</SUB> }>];
-
-    "export-declaration" -> export declaration;
+    exdecl1[label=<export { declaration-seq<SUB>opt</SUB> }<BR/><BR/>
+export declaration<BR/><BR/>
+export-keyword module-import-declaration>];
     "export-declaration" -> exdecl1;
-    "export-declaration" -> "export-keyword module-import-declaration";
 
-    imprtdecl1[label=<import-keyword module-name attribute-specifier-seq<SUB>opt</SUB> ;>];
-    imprtdecl2[label=<import-keyword module-partition attribute-specifier-seq<SUB>opt</SUB> ;>];
-    imprtdecl3[label=<import-keyword header-name attribute-specifier-seq<SUB>opt</SUB> ;>];
-
+    imprtdecl1[label=<import-keyword module-name attribute-specifier-seq<SUB>opt</SUB> ;<BR/><BR/>
+import-keyword module-partition attribute-specifier-seq<SUB>opt</SUB> ;<BR/><BR/>
+import-keyword header-name attribute-specifier-seq<SUB>opt</SUB> ;>];
     "module-import-declaration" -> imprtdecl1;
-    "module-import-declaration" -> imprtdecl2;
-    "module-import-declaration" -> imprtdecl3;
 
     glmodfrag1[label=<module-keyword ; declaration-seq<SUB>opt</SUB>>]
-
     "global-module-fragment" -> glmodfrag1;
 
     privmodfrag1[label=<module-keyword : private ; declaration-seq<SUB>opt</SUB>>];
-
     "private-module-fragment" -> privmodfrag1;
 
     
@@ -579,17 +494,13 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "class-name" -> "simple-template-id";
 
     classpec1[label=<class-head { member-specification<SUB>opt</SUB> }>];
-
     "class-specifier" -> classpec1;
 
-    classhd1[label=<class-key attribute-specifier-seq<SUB>opt</SUB> class-head-name class-virt-specifier<SUB>opt</SUB> base-clause<SUB>opt</SUB>>];
-    classhd2[label=<class-key attribute-specifier-seq<SUB>opt</SUB> base-clause<SUB>opt</SUB>>];
-
+    classhd1[label=<class-key attribute-specifier-seq<SUB>opt</SUB> class-head-name class-virt-specifier<SUB>opt</SUB> base-clause<SUB>opt</SUB><BR/><BR/>
+class-key attribute-specifier-seq<SUB>opt</SUB> base-clause<SUB>opt</SUB>>];
     "class-head" -> classhd1;
-    "class-head" -> classhd2;
 
     classhdnm1[label=<nested-name-specifier<SUB>opt</SUB> class-name>];
-
     "class-head-name" -> classhdnm1;
 
     "class-virt-specifier" -> "final";
@@ -598,14 +509,11 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "class-key" -> "struct";
     "class-key" -> "union";
 
-    memspec1[label=<member-declaration member-specification<SUB>opt</SUB>>];
-    memspec2[label=<access-specifier : member-specification<SUB>opt</SUB>>];
-
+    memspec1[label=<member-declaration member-specification<SUB>opt</SUB><BR/><BR/>
+access-specifier : member-specification<SUB>opt</SUB>>];
     "member-specification" -> memspec1;
-    "member-specification" -> memspec2;
 
     memdecl1[label=<attribute-specifier-seq<SUB>opt</SUB> decl-specifier-seq<SUB>opt</SUB> member-declarator-list<SUB>opt</SUB> ;>];
-
     "member-declaration" -> memdecl1;
     "member-declaration" -> "function-definition";
     "member-declaration" -> "using-declaration";
@@ -621,14 +529,11 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "member-declarator-list" -> "member-declarator";
     "member-declarator-list" -> "member-declarator-list , member-declarator";
 
-    memdecl1[label=<declarator virt-specifier-seq<SUB>opt</SUB> pure-specifier<SUB>opt</SUB>>];
-    memdecl2[label=<declarator brace-or-equal-initializer<SUB>opt</SUB>>];
-    memdecl3[label=<identifier<SUB>opt</SUB> attribute-specifier-seq<SUB>opt</SUB> : constant-expression brace-or-equal-initializer<SUB>opt</SUB>>];
-
+    memdecl1[label=<declarator virt-specifier-seq<SUB>opt</SUB> pure-specifier<SUB>opt</SUB><BR/><BR/>
+declarator brace-or-equal-initializer<SUB>opt</SUB><BR/><BR/>
+identifier<SUB>opt</SUB> attribute-specifier-seq<SUB>opt</SUB> : constant-expression brace-or-equal-initializer<SUB>opt</SUB><BR/><BR/>
+declarator requires-clause>];
     "member-declarator" -> memdecl1;
-    "member-declarator" -> "declarator requires-clause";
-    "member-declarator" -> memdecl2;
-    "member-declarator" -> memdecl3;
 
     "virt-specifier-seq" -> "virt-specifier";
     "virt-specifier-seq" -> "virt-specifier-seq virt-specifier";
@@ -641,11 +546,9 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "conversion-function-id" -> "operator conversion-type-id";
 
     convtpid1[label=<type-specifier-seq conversion-declarator<SUB>opt</SUB>>];
-
     "conversion-type-id" -> convtpid1;
 
     convdecl1[label=<ptr-operator conversion-declarator<SUB>opt</SUB>>];
-
     "conversion-declarator" -> convdecl1;
 
 
@@ -654,25 +557,19 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
 
     "base-clause" -> "base-specifier-list";
 
-    basespecl1[label=<base-specifier ...<SUB>opt</SUB>>];
-    basespecl2[label=<base-specifier-list , base-specifier ...<SUB>opt</SUB>>];
-
+    basespecl1[label=<base-specifier . . .<SUB>opt</SUB><BR/><BR/>
+base-specifier-list , base-specifier . . .<SUB>opt</SUB>>];
     "base-specifier-list" -> basespecl1;
-    "base-specifier-list" -> basespecl2;
 
-    basespec1[label=<attribute-specifier-seq<SUB>opt</SUB> class-or-decltype>];
-    basespec2[label=<attribute-specifier-seq<SUB>opt</SUB> virtual access-specifier<SUB>opt</SUB> class-or-decltype>];
-    basespec3[label=<attribute-specifier-seq<SUB>opt</SUB> access-specifier virtual<SUB>opt</SUB> class-or-decltype>];
-
+    basespec1[label=<attribute-specifier-seq<SUB>opt</SUB> class-or-decltype<BR/><BR/>
+attribute-specifier-seq<SUB>opt</SUB> virtual access-specifier<SUB>opt</SUB> class-or-decltype<BR/><BR/>
+attribute-specifier-seq<SUB>opt</SUB> access-specifier virtual<SUB>opt</SUB> class-or-decltype>];
     "base-specifier" -> basespec1;
-    "base-specifier" -> basespec2;
-    "base-specifier" -> basespec3;
 
-    clasordecl1[label=<nested-name-specifier<SUB>opt</SUB> type-name&gt;>];
-
+    clasordecl1[label=<nested-name-specifier<SUB>opt</SUB> type-name&gt;
+nested-name-specifier template simple-template-id<BR/><BR/>
+decltype-specifie>];
     "class-or-decltype" -> clasordecl1;
-    "class-or-decltype" -> "nested-name-specifier template simple-template-id";
-    "class-or-decltype" -> "decltype-specifier";
 
     "access-specifier" -> "private";
     "access-specifier" -> "protected";
@@ -684,16 +581,13 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
 
     "ctor-initializer" -> ": mem-initializer-list";
 
-    meminitlist1[label=<mem-initializer ...<SUB>opt</SUB>>];
-    meminitlist2[label=<mem-initializer-list , mem-initializer ...<SUB>opt</SUB>>];
-
+    meminitlist1[label=<mem-initializer . . .<SUB>opt</SUB><BR/><BR/>
+mem-initializer-list , mem-initializer . . .<SUB>opt</SUB>>];
     "mem-initializer-list" -> meminitlist1;
-    "mem-initializer-list" -> meminitlist2;
 
-    meminitl1[label=<mem-initializer-id ( expression-list<SUB>opt</SUB> )>];
-
+    meminitl1[label=<mem-initializer-id ( expression-list<SUB>opt</SUB> )<BR/><BR/>
+mem-initializer-id braced-init-list>];
     "mem-initializer" -> meminitlist1;
-    "mem-initializer" -> "mem-initializer-id braced-init-list";
 
     "mem-initializer-id" -> "class-or-decltype";
     "mem-initializer-id" -> "identifier";
@@ -702,22 +596,67 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
 
     # [over.call.func] ------------------------------------------------------------------
 
-    "postfix-expression:" -> "postfix-expression . id-expression";
-    "postfix-expression:" -> "postfix-expression -> id-expression";
-    "postfix-expression:" -> "primary-expression";
+    pstexpr1[label=<postfix-expression . id-expression<BR/><BR/>
+postfix-expression -&gt; id-expression<BR/><BR/>
+primary-expression>];
+
+    "postfix-expression:" -> pstexpr1;
 
     "operator-function-id" -> "operator operator";
 
-    oper1[label=<new<BR/><BR/>delete<BR/><BR/>new[]<BR/><BR/>delete[]<BR/><BR/>co_await<BR/><BR/>()<BR/><BR/>[]<BR/><BR/>&rarr;<BR/><BR/>&rarr;*<BR/><BR/>~<BR/><BR/>!<BR/><BR/>+<BR/><BR/>-<BR/><BR/>*<BR/><BR/>/<BR/><BR/>%<BR/><BR/>^<BR/><BR/>&amp;<BR/><BR/>|<BR/><BR/>=<BR/><BR/>+=<BR/><BR/>-=<BR/><BR/>*=<BR/><BR/>/=<BR/><BR/>%=<BR/><BR/>^=<BR/><BR/>&amp;=<BR/><BR/>|=<BR/><BR/>==<BR/><BR/>!=<BR/><BR/>&lt;<BR/><BR/>&gt;<BR/><BR/>&lt;=<BR/><BR/>&gt;=<BR/><BR/>&lt;=&gt;<BR/><BR/>&amp;&amp;<BR/><BR/>||<BR/><BR/>&lt;&lt;<BR/><BR/>&gt;&gt;<BR/><BR/>&lt;&lt;=<BR/><BR/>&gt;&gt;=<BR/><BR/>++<BR/><BR/>--<BR/><BR/>,>];
-
-    "operator" -> oper1;
+    oper1[label=<new<BR/><BR/>
+delete<BR/><BR/>
+new[]<BR/><BR/>
+delete[]<BR/><BR/>
+co_await<BR/><BR/>
+()<BR/><BR/>
+[]<BR/><BR/>
+&rarr;<BR/><BR/>
+&rarr;*<BR/><BR/>
+~<BR/><BR/>
+!<BR/><BR/>
++<BR/><BR/>
+-<BR/><BR/>
+*<BR/><BR/>
+/<BR/><BR/>
+%<BR/><BR/>
+^<BR/><BR/>
+&amp;<BR/><BR/>
+|<BR/><BR/>
+=<BR/><BR/>
++=<BR/><BR/>
+-=<BR/><BR/>
+*=<BR/><BR/>
+/=<BR/><BR/>
+%=<BR/><BR/>
+^=<BR/><BR/>
+&amp;=<BR/><BR/>
+|=<BR/><BR/>
+==<BR/><BR/>
+!=<BR/><BR/>
+&lt;<BR/><BR/>
+&gt;<BR/><BR/>
+&lt;=<BR/><BR/>
+&gt;=<BR/><BR/>
+&lt;=&gt;<BR/><BR/>
+&amp;&amp;<BR/><BR/>
+||<BR/><BR/>
+&lt;&lt;<BR/><BR/>
+&gt;&gt;<BR/><BR/>
+&lt;&lt;=<BR/><BR/>
+&gt;&gt;=<BR/><BR/>
+++<BR/><BR/>
+--<BR/><BR/>
+,>];
+"operator" -> oper1;
 
 
 
     # [over.literal] ------------------------------------------------------------------
 
-    "literal-operator-id" -> "operator string-literal identifier";
-    "literal-operator-id" -> "operator user-defined-string-literal";
+    liopid1[lable=<operator string-literal identifier<BR/><BR/>
+operator user-defined-string-literal>];
+    "literal-operator-id" -> liopid1;
 
 
 
@@ -747,7 +686,12 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     temppar1[label=<type-parameter<BR/><BR/>parameter-declaration>];
     "template-parameter" -> temppar1;
 
-    typepar1[label=<type-parameter-key ...<SUB>opt</SUB> identifier<SUB>opt</SUB><BR/><BR/>type-parameter-key identifier<SUB>opt</SUB> = type-id<BR/><BR/>type-constraint ...<SUB>opt</SUB> identifier<SUB>opt</SUB><BR/><BR/>type-constraint identifier<SUB>opt</SUB> = type-id<BR/><BR/>template-head type-parameter-key ...<SUB>opt</SUB> identifier<SUB>opt</SUB><BR/><BR/>template-head type-parameter-key identifier<SUB>opt</SUB> = id-expression>];
+    typepar1[label=<type-parameter-key . . .<SUB>opt</SUB> identifier<SUB>opt</SUB><BR/><BR/>
+type-parameter-key identifier<SUB>opt</SUB> = type-id<BR/><BR/>
+type-constraint . . .<SUB>opt</SUB> identifier<SUB>opt</SUB><BR/><BR/>
+type-constraint identifier<SUB>opt</SUB> = type-id<BR/><BR/>
+template-head type-parameter-key . . .<SUB>opt</SUB> identifier<SUB>opt</SUB><BR/><BR/>
+template-head type-parameter-key identifier<SUB>opt</SUB> = id-expression>];
     "type-parameter" -> typepar1;
 
     "type-parameter-key" -> "class";
@@ -764,12 +708,11 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
     "simple-template-id" -> smtempid1;
 
     tmpid1[label=<simple-template-id<BR/><BR/>operator-function-id &lt; template-argument-list<SUB>opt</SUB> &gt;<BR/><BR/>literal-operator-id &lt; template-argument-list<SUB>opt</SUB> &gt;>];
-
     "template-id" -> tmpid1;
 
     "template-name" -> "identifier";
 
-    tmpargl1[label=<template-argument ...<SUB>opt</SUB><BR/><BR/>template-argument-list , template-argument ...<SUB>opt</SUB>>];
+    tmpargl1[label=<template-argument . . .<SUB>opt</SUB><BR/><BR/>template-argument-list , template-argument . . .<SUB>opt</SUB>>];
     "template-argument-list" -> tmpargl1;
 
     "template-argument" -> "constant-expression";
@@ -804,7 +747,7 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
 
     "handler" -> "catch ( exception-declaration ) compound-statement";
 
-    excpdecl1[label=<attribute-specifier-seq<SUB>opt</SUB> type-specifier-seq declarator<BR/><BR/>attribute-specifier-seq<SUB>opt</SUB> type-specifier-seq abstract-declarator<SUB>opt</SUB><BR/><BR/>...>];
+    excpdecl1[label=<attribute-specifier-seq<SUB>opt</SUB> type-specifier-seq declarator<BR/><BR/>attribute-specifier-seq<SUB>opt</SUB> type-specifier-seq abstract-declarator<SUB>opt</SUB><BR/><BR/>. . .>];
     "exception-declaration" -> excpdecl1;
 
     "noexcept-specifier" -> "noexcept ( constant-expression )";
