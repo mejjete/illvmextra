@@ -89,8 +89,8 @@ user-defined-literal>];
     "literal" -> ltrl1;
 
     intglit1[label=<binary-literal integer-suffix<SUB>opt</SUB><BR/><BR/>
-octal-literal integer-suffix<SUB>opt</SUB>
-decimal-literal integer-suffix<SUB>opt</SUB>
+octal-literal integer-suffix<SUB>opt</SUB><BR/><BR/>
+decimal-literal integer-suffix<SUB>opt</SUB><BR/><BR/>
 hexadecimal-literal integer-suffix<SUB>opt</SUB>>];
     "integer-literal" -> intglit1;
     
@@ -103,10 +103,12 @@ binary-literal ’<SUB>opt</SUB> binary-digit>];
 octal-literal ’<SUB>opt</SUB> octal-digit>];
     "octal-literal" -> octlit1;
 
-    declit1[label=<nonzero-digit
-decimal-literal ’<BR/><BR/> digit>];
+
+    declit1[label=<nonzero-digit<BR/><BR/>
+decimal-literal ’>];
     "decimal-literal" -> declit1;
- 
+    "decimal-literal" -> "digit";
+
     "hexadecimal-literal" -> "hexadecimal-prefix hexadecimal-digit-sequence";
 
     "binary-digit" -> "one of [ 1 0] ";
@@ -240,7 +242,7 @@ type-name ::<BR/><BR/>
 namespace-name ::<BR/><BR/>
 decltype-specifier ::<BR/><BR/>
 nested-name-specifier identifier ::<BR/><BR/>
-nested-name-specifier template<SUB><SUB>opt</SUB></SUB> simple-template-id ::>];
+nested-name-specifier template<SUB>opt</SUB> simple-template-id ::>];
     "nested-name-specifier" -> nestnmspec1;
     
     lmexpr1 [label=<lambda-introducer lambda-declarator<SUB>opt</SUB> compound-statement<BR/><BR/>
@@ -259,8 +261,236 @@ capture-list<BR/><BR/>
 capture-default , capture-list>];
     "lambda-capture" -> lmcap1;
 
-    "capture-default";
+    capdef1[label=<&lt;<BR/><BR/>=&gt;>];
+    "capture-default" -> capdef1;
 
+    "capture-list" -> "capture";
+    "capture-list" -> "capture-list , capture";
+
+    "capture" -> "simple-capture";
+    "capture" -> "init-capture";
+
+    simpcap1[label=<identifier ...opt<BR/><BR/>
+&amp; identifier ...<SUB>opt</SUB><BR/><BR/>
+this<BR/><BR/>
+* this>];
+    "simple-capture" -> simpcap1;
+
+    initcap1[label=<...<SUB>opt</SUB> identifier initializer<BR/><BR/>
+&amp; ...<SUB>opt</SUB> identifier initializer>];
+    "init-capture" -> initcap1;
+
+    fldexpr1[label=<( cast-expression fold-operator ... )<BR/><BR/>
+( ... fold-operator cast-expression )<BR/><BR/>
+( cast-expression fold-operator ... fold-operator cast-expression )>];
+    "fold-expression" -> fldexpr1;
+
+    fldop1 [label=<one of<BR/><BR/>
++<BR/><BR/>
+-&lt;<BR/><BR/>
+*<BR/><BR/>
+/<BR/><BR/>
+%<BR/><BR/>
+^<BR/><BR/>
+&amp;<BR/><BR/>
+|<BR/><BR/>
+&lt;&lt;<BR/><BR/>
+&gt;&gt;<BR/><BR/>
++=<BR/><BR/>
+-=<BR/><BR/>
+*=<BR/><BR/>
+/=<BR/><BR/>
+%=<BR/><BR/>
+^=<BR/><BR/>
+&amp;=<BR/><BR/>
+|=<BR/><BR/>
+&lt;&lt;= &gt;&gt;= =<BR/><BR/>
+==<BR/><BR/>
+!=<BR/><BR/>
+&lt;<BR/><BR/>
+&gt;<BR/><BR/>
+&lt;=<BR/><BR/>
+&gt;=<BR/><BR/>
+&amp;&amp;<BR/><BR/>
+||<BR/><BR/>
+,<BR/><BR/>
+.*<BR/><BR/>
+-&gt;*>];
+    "fold-operator" -> fldop1;
+
+    reqexpe1[lable=<requires requirement-parameter-list<SUB>opt</SUB> requirement-body>];
+    "requires-expression" -> reqexpe1;
+
+    reqparl1[label=<( parameter-declaration-clause<SUB>opt</SUB> )>];    
+    "requirement-parameter-list" -> reqparl1;
+
+    "requirement-body" -> "{ requirement-seq }";
+
+    "requirement-seq" -> "requirement";
+    "requirement-seq" -> "requirement-seq requirement";
+
+    "requirement" -> "simple-requirement";
+    "requirement" -> "type-requirement";
+    "requirement" -> "compound-requirement";
+    "requirement" -> "nested-requirement";
+
+    "simple-requirement" -> "expression ;";
+
+    tpreq1[label=<typename nested-name-specifier<SUB>opt</SUB> type-name ;>];
+    "type-requirement" -> tpreq1;
+
+    cmpreq1[label=<{ expression } noexcept<SUB>opt</SUB> return-type-requirement<SUB>opt</SUB> ;>];
+    "compound-requirement" -> cmpreq1;
+
+    "return-type-requirement" -> "-> type-constraint";
+
+    "nested-requirement" -> "requires constraint-expression ;";
+
+    pstfxexpr1 [label=<primary-expression<BR/><BR/>
+postfix-expression [ expr-or-braced-init-list ]<BR/><BR/>
+postfix-expression ( expression-list<SUB>opt</SUB> )<BR/><BR/>
+simple-type-specifier ( expression-list<SUB>opt</SUB> )<BR/><BR/>
+typename-specifier ( expression-list<SUB>opt</SUB> )<BR/><BR/>
+simple-type-specifier braced-init-list<BR/><BR/>
+typename-specifier braced-init-list<BR/><BR/>
+postfix-expression . template<SUB>opt</SUB> id-expression<BR/><BR/>
+postfix-expression -&gt; template<SUB>opt</SUB> id-expression<BR/><BR/>
+postfix-expression ++<BR/><BR/>
+postfix-expression --<BR/><BR/>
+dynamic_cast &lt; type-id &gt; ( expression )<BR/><BR/>
+static_cast &lt; type-id &gt; ( expression )<BR/><BR/>
+reinterpret_cast &lt; type-id &gt; ( expression )<BR/><BR/>
+const_cast &lt; type-id &gt; ( expression )<BR/><BR/>
+typeid ( expression )<BR/><BR/>
+typeid ( type-id )>];
+    "postfix-expression" -> pstfxexpr1;
+
+    "expression-list" -> "initializer-list";
+
+    unexpr1[label=<postfix-expression<BR/><BR/>
+unary-operator cast-expression<BR/><BR/>
+++ cast-expression<BR/><BR/>
+-- cast-expression<BR/><BR/>
+await-expression<BR/><BR/>
+sizeof unary-expression<BR/><BR/>
+sizeof ( type-id )<BR/><BR/>
+sizeof ... ( identifier )<BR/><BR/>
+alignof ( type-id )<BR/><BR/>
+noexcept-expression<BR/><BR/>
+new-expression<BR/><BR/>
+delete-expression>];
+    "unary-expression" -> unexpr1;
+
+    "unary-operator" -> "one of * & + - ! ~";
+
+    "await-expression" -> "co_await cast-expression";
+
+    "noexcept-expression" -> "noexcept ( expression )";
+
+    newxpr1[label=<::<SUB>opt</SUB> new new-placement<SUB>opt</SUB> new-type-id new-initializer<SUB>opt</SUB><BR/><BR/>
+::<SUB>opt</SUB> new new-placement<SUB>opt</SUB> ( type-id ) new-initializer<SUB>opt</SUB>>];
+    "new-expression" -> newxpr1;
+
+    "new-placement" -> "( expression-list )";
+
+    nwtpid1[label=<type-specifier-seq new-declarator<SUB>opt</SUB>>];
+    "new-type-id" -> nwtpid1;
+
+    nwdecl1[label=<ptr-operator new-declarator<SUB>opt</SUB><BR/><BR/>
+noptr-new-declarator>];
+    "new-declarator" -> nwdecl1;
+
+    nptnwdec1[label=<[ expression<SUB>opt</SUB> ] attribute-specifier-seq<SUB>opt</SUB><BR/><BR/>
+noptr-new-declarator [ constant-expression ] attribute-specifier-seq<SUB>opt</SUB>>];
+    "noptr-new-declarator" -> nptnwdec1;
+
+    nwinit1[label=<( expression-list<SUB>opt</SUB> )
+braced-init-list>];
+    "new-initializer" -> nwinit1;
+
+    delexpr1[label=<::<SUB>opt</SUB> delete cast-expression<BR/><BR/>
+::<SUB>opt</SUB> delete [ ] cast-expression>];
+    "delete-expression" -> delexpr1;
+
+    "cast-expression" -> "unary-expression";
+    "cast-expression" -> "( type-id ) cast-expression";
+
+    pmexp1 [label=<pm-expression .* cast-expression<BR/><BR/>
+pm-expression -&gt;* cast-expression>];
+    "pm-expression" -> "cast-expression";
+    "pm-expression" -> pmexp1;
+
+    mulexp1[label=<multiplicative-expression * pm-expression<BR/><BR/>
+multiplicative-expression / pm-expression<BR/><BR/>
+multiplicative-expression % pm-expression>];
+    "multiplicative-expression" -> "pm-expression";
+    "multiplicative-expression" -> mulexp1;
+
+    addexp1[label=<additive-expression + multiplicative-expression<BR/><BR/>
+additive-expression - multiplicative-expression>];
+    "additive-expression" -> "multiplicative-expression";
+    "additive-expression" -> addexp1;
+
+    sftexp1[label=<shift-expression &lt;&lt; additive-expression<BR/><BR/>
+shift-expression &gt;&gt; additive-expression>];
+    "shift-expression" -> "additive-expression";
+    "shift-expression" -> sftexp1;
+
+    cmpexp1[label=<compare-expression &lt;=&gt; shift-expression>];
+    "compare-expression" -> "shift-expression";
+    "compare-expression" -> cmpexp1;
+
+    ratexpr1[label=<relational-expression &lt; compare-expression<BR/><BR/>
+relational-expression &gt; compare-expression<BR/><BR/>
+relational-expression &lt;= compare-expression<BR/><BR/>
+relational-expression &gt;= compare-expression>];
+    "relational-expression" -> "compare-expression";
+    "relational-expression" -> ratexpr1;
+
+    eqexp1[label=<equality-expression == relational-expression<BR/><BR/>
+equality-expression != relational-expression>];
+    "equality-expression" -> "relational-expression";
+    "equality-expression" -> eqexp1;
+
+    "and-expression" -> "equality-expression";
+    "and-expression" -> "and-expression & equality-expression";
+
+    "exclusive-or-expression" -> "and-expression";
+    "exclusive-or-expression" -> "exclusive-or-expression ^ and-expression";
+
+    "inclusive-or-expression" -> "exclusive-or-expression";
+    "inclusive-or-expression" -> "inclusive-or-expression | exclusive-or-expression";
+
+    "logical-and-expression" -> "inclusive-or-expression";
+    "logical-and-expression" -> "logical-and-expression && inclusive-or-expression";
+
+    "logical-or-expression" -> "logical-and-expression";
+    "logical-or-expression" -> "logical-or-expression || logical-and-expression";
+
+    "conditional-expression" -> "logical-or-expression";
+    "conditional-expression" -> "logical-or-expression ? expression : assignment-expression";
+
+    yldexp1[label=<co_yield assignment-expression<BR/><BR/>
+co_yield braced-init-list>];
+    "yield-expression" -> yldexp1;
+
+    threxp1[label=<throw assignment-expression<SUB>opt</SUB>>];
+    "throw-expression" -> threxp1;
+
+    assgexp1[label=<logical-or-expression assignment-operator initializer-clause>];
+    "assignment-expression" -> "conditional-expression";
+    "assignment-expression" -> "yield-expression";
+    "assignment-expression" -> "throw-expression";
+    "assignment-expression" -> assgexp1;
+
+
+    "assignment-operator" -> "one of = *= /= %= += -= >>= <<= &= ^= |=";
+
+    "expression" -> "assignment-expression";
+    "expression" -> "expression , assignment-expression";
+
+    "constant-expression" -> "conditional-expression";
+    
 
 
     # [stmt.pre] ------------------------------------------------------------------
@@ -905,7 +1135,7 @@ co_await<BR/><BR/>
 ++<BR/><BR/>
 --<BR/><BR/>
 ,>];
-"operator" -> oper1;
+    "operator" -> oper1;
 
 
 
@@ -1009,8 +1239,4 @@ template-head type-parameter-key identifier<SUB>opt</SUB> = id-expression>];
 
     "noexcept-specifier" -> "noexcept ( constant-expression )";
     "noexcept-specifier" -> "noexcept";
-
-
-
-    # [cpp.pre] ------------------------------------------------------------------
 }
