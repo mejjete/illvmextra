@@ -32,7 +32,7 @@ struct CustomLabelWriter
  *  They basically control the display options of the node, i.e disable or enable the optional node information.
  *  
  *  The other begin with TF, it modifies the AST tree itself either by transforming it or by omitting some of the 
- *  branches of the tree that do not seem to be relevant. 
+ *  branches of the tree that does not seem to be relevant. 
  */
 enum 
 {
@@ -77,19 +77,18 @@ int main(int argc, char **argv)
         if(vm.count("help"))
         {
             std::cout << desc << std::endl;
-            return 0;
-        }
-
-        if(vm.count("list"))
+            return EXIT_SUCCESS;
+        } 
+        else if(vm.count("list"))
         {
-            std::cout << "no-node-id - Removes internal node identification number\n";
-            std::cout << "no-loc - Removes any location information\n";
-            std::cout << "no-errors - Removes error message\n";
-            std::cout << "no-implicit - Removes any node containing 'implicit' annotation\n";
-            std::cout << "fancy - A set of filters aimed at providing clear AST visualization\n";
-        }
-
-        if(vm.count("format"))
+            std::cout << "\tno-node-id    - Removes internal node identification number\n";
+            std::cout << "\tno-loc        - Removes any location information\n";
+            std::cout << "\tno-errors     - Removes error message\n";
+            std::cout << "\tno-implicit   - Removes any node containing 'implicit' annotation\n";
+            std::cout << "\tfancy         - A set of filters aimed at providing clear AST visualization\n";
+            return EXIT_SUCCESS;
+        } 
+        else if(vm.count("format"))
         {
             std::istringstream FormatStream(vm["format"].as<std::string>());
             std::string Format;
@@ -111,6 +110,8 @@ int main(int argc, char **argv)
                     throw po::error("No such format option: " + Format);
             }
         }
+        else
+            throw po::error("Unknown option");
 
         const auto& InputFileName = vm["input-file"].as<std::string>();
         const auto& OutputFileName = vm["output-file"].as<std::string>();
