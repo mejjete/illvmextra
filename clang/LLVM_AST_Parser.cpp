@@ -110,19 +110,17 @@ int main(int argc, char **argv)
                     throw po::error("No such format option: " + Format);
             }
         }
-        else
-            throw po::error("Unknown option");
 
         const auto& InputFileName = vm["input-file"].as<std::string>();
         const auto& OutputFileName = vm["output-file"].as<std::string>();
 
         std::ifstream iFile(InputFileName, std::ios::binary);
         if(!iFile.is_open())
-            throw std::runtime_error("ERROR opening input file: " + std::string(argv[1]));
+            throw std::runtime_error("ERROR opening input file: " + InputFileName);
         
         std::ofstream oFile(OutputFileName, std::ios::binary);
         if(!oFile.is_open())
-            throw std::runtime_error("ERROR opening output file: " + std::string(argv[2]));
+            throw std::runtime_error("ERROR opening output file: " + OutputFileName);
         
         auto Graph = ParseLLVMAST(iFile, FormatArgs);
         write_graphviz(oFile, Graph, CustomLabelWriter(Graph));
@@ -130,7 +128,10 @@ int main(int argc, char **argv)
     } catch(const po::error& e) {
         std::cerr << "Error: " << e.what() << std::endl;
         std::cerr << "Use '--help' to see valid options" << std::endl;
-    };
+    } catch(const std::runtime_error& re) {
+        std::cerr << re.what() << std::endl;
+        std::cerr << "Specify valid input and output files" << std::endl;
+    }
 };
 
 ASTVisGraph ParseLLVMAST(std::ifstream& iFile, int FormatArgs) 
