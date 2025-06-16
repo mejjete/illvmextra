@@ -60,8 +60,8 @@ int main(int argc, char **argv)
         ("help,h", "Show help message")
         ("format,f", po::value<std::string>(), "Apply filters to incomming LLVM AST")
         ("list,l", "Show available filters")
-        ("output-file,o", po::value<std::string>(), "Specify output Graphviz file")
-        ("input-file", po::value<std::string>(), "Specify input LLVM AST file");
+        ("output-file,o", po::value<std::string>()->required(), "Specify output Graphviz file")
+        ("input-file", po::value<std::string>()->required(), "Specify input LLVM AST file");
     
     po::positional_options_description p;
     p.add("input-file", -1);
@@ -72,13 +72,12 @@ int main(int argc, char **argv)
     {   
         po::variables_map vm;
         po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
-        po::notify(vm);
 
         if(vm.count("help"))
         {
             std::cout << desc << std::endl;
             return EXIT_SUCCESS;
-        } 
+        }
         else if(vm.count("list"))
         {
             std::cout << "\tno-node-id    - Removes internal node identification number\n";
@@ -87,8 +86,11 @@ int main(int argc, char **argv)
             std::cout << "\tno-implicit   - Removes any node containing 'implicit' annotation\n";
             std::cout << "\tfancy         - A set of filters aimed at providing clear AST visualization\n";
             return EXIT_SUCCESS;
-        } 
-        else if(vm.count("format"))
+        }
+        
+        po::notify(vm);
+
+        if(vm.count("format"))
         {
             std::istringstream FormatStream(vm["format"].as<std::string>());
             std::string Format;
@@ -124,7 +126,6 @@ int main(int argc, char **argv)
         
         auto Graph = ParseLLVMAST(iFile, FormatArgs);
         write_graphviz(oFile, Graph, CustomLabelWriter(Graph));
-
     } catch(const po::error& e) {
         std::cerr << "Error: " << e.what() << std::endl;
         std::cerr << "Use '--help' to see valid options" << std::endl;
@@ -223,7 +224,8 @@ std::string& FilterLine(std::string& Line, int FormatArgs)
     // Removes internal hexademical node representation 
     if((FormatArgs & DF_NO_NODE_ID) == DF_NO_NODE_ID)
     {
-        if((Iter = Line.find("0x")) != std::string::npos)
+        // clang's AST nodes can consist of more than one internal hexademical references
+        while((Iter = Line.find("0x")) != std::string::npos)
         {
             // +1 means we would like to remove also a tralling 0
             auto HexEnd = Line.find_first_of(" ", Iter);
