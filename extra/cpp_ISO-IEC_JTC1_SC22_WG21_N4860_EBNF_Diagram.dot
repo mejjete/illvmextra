@@ -6,6 +6,13 @@ digraph CppISO_IEC_JTC1_SC22_WG21_N4890_EBNF_Diagram {
 
 
 
+    # [gram.basic] ------------------------------------------------------------------
+
+    transUnit1[label=<declaration-seq<SUB>opt</SUB>>]
+    "translation-unit" -> transUnit1;
+
+
+
     # [gram.key] ------------------------------------------------------------------
 
     "typedef-name" -> "identifier";
